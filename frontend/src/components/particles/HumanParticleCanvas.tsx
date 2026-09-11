@@ -22,5 +22,23 @@ export default function HumanParticleCanvas() {
       }} fallback={null}><HumanInstancedMesh /></Canvas></CanvasBoundary>
     </div>
     <div className="canvas-scrim" aria-hidden="true" />
+    {record && pos && pos.x > 0 && pos.y > 0 && (
+      <aside
+        className="particle-memorial-pill"
+        style={{
+          left: `${pos.x}px`,
+          top: `${pos.y - 14}px`,
+        }}
+        aria-live="polite"
+      >
+        <span className="pill-dot" aria-hidden="true" />
+        <strong className="pill-name">{record.ar_name || record.en_name}</strong>
+        {record.age !== null && record.age !== undefined && (
+          <span className="pill-age">
+            {record.age === 0 ? 'رضيع' : `${record.age} عاماً`}
+          </span>
+        )}
+      </aside>
+    )}
   </>;
 }

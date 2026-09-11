@@ -176,30 +176,27 @@ export default function HumanInstancedMesh() {
   const targets = useMemo(() => {
     const values = new Float32Array(count * 4);
     const mobile = size.width < 760;
-    const groups = [0,0,0,0,0,0];
     const ranks = new Map(archiveRecords.map((r,i) => [r.id,i]));
+
     for(let i=0;i<count;i++) {
-      const a = random(i), b = random(i,1), c = random(i,2);
+      const a = random(i), b = random(i,1), c = random(i,2), d = random(i,3);
       let x = (a-.5)*w*.85, y = (b-.5)*h*.62, z = c*2, scale = mobile ? .085 : .075;
+
       if(mode === 'number' || mode === 'hero') {
         const point = number[i] || [700,175];
         x=(point[0]/1400-.5)*w*(mobile ? 1.09 : 1.0);
         y=-(point[1]/350-.5)*Math.min(h*.34,w*.32)+h*.005;
         scale=mobile ? .043 : .062; z=0;
       } else if(mode === 'scatter') {
-        // Assembles into the sovereign borders and territory of Palestine
+        // Sovereign borders and territory of Palestine
         const pt = palestinePoints[i] || [0.5, 0.5, true];
         const [nx, ny, isBorder] = pt;
-        // Natural aspect ratio of Palestine (Height / Width = ~2.57)
         const mapH = mobile ? Math.min(h * 0.62, w * 1.18) : Math.min(h * 0.78, w * 0.52);
         const mapW = mapH / 2.57;
-
-        // Position: On desktop, text is on the right (RTL), so center Palestine slightly to the left
         const xCenter = mobile ? 0 : -w * 0.13;
         const yCenter = mobile ? -h * 0.04 : -h * 0.02;
 
         x = (nx - 0.48) * mapW + xCenter;
-        // ny: 0 is South, 1 is North. In 3D: +y is up (North), -y is down (South).
         y = (ny - 0.50) * mapH + yCenter;
         z = isBorder ? 0.35 + c * 0.25 : (c - 0.5) * 0.7;
         scale = (mobile ? 0.052 : 0.068) + (isBorder ? 0.012 : 0) + c * 0.01;
@@ -218,50 +215,103 @@ export default function HumanInstancedMesh() {
           x=(a-.5)*w*.65-w*.12; y=(b-.5)*h*.26-h*.07; scale=active?.045:.075;
         }
       } else if(mode === 'stats') {
-        const age=visibleRecords[i]?.age;
-        const group=age===null||age===undefined ? 5 : Math.min(5,Math.floor(age/10));
-        const rank=groups[group]++;
-        x=-w*.365+group*w*.146+(rank%12)*w*.006;
-        y=-h*.22+Math.floor(rank/12)*.043;
-        z=0; scale=.043;
+        // Creative 4th Shape: The Olive Tree of Memory & Roots (شجرة الزيتون والذاكرة)
+        // Replaces plain histogram columns with an iconic, sacred Olive Tree of Palestine
+        const xCenter = mobile ? 0 : -w * 0.12;
+        const ratio = i / Math.max(count, 1);
+
+        if (ratio < 0.28) {
+          // Roots & Trunk (Deep, ancient, grounded elders & ancestors)
+          const trunkH = ratio / 0.28; // 0 to 1
+          y = -h * 0.38 + trunkH * (h * 0.30);
+          const flare = trunkH < 0.25 ? (0.25 - trunkH) * 4 * w * 0.14 : 0;
+          x = xCenter + (b - 0.5) * (w * 0.065 + flare);
+          z = (c - 0.5) * 0.9;
+          scale = mobile ? 0.055 : 0.068;
+        } else if (ratio < 0.60) {
+          // Main Boughs & Branches (Youth and adults branching outward)
+          const boughT = (ratio - 0.28) / 0.32;
+          const branchSide = a > 0.5 ? 1 : -1;
+          const curve = Math.pow(boughT, 0.75);
+          x = xCenter + branchSide * (curve * w * 0.34 + (b - 0.5) * w * 0.08);
+          y = -h * 0.12 + curve * (h * 0.32) + (c - 0.5) * h * 0.07;
+          z = (d - 0.5) * 1.1;
+          scale = mobile ? 0.048 : 0.06;
+        } else {
+          // Crown / Canopy of Leaves (Children, infants, blossoms shimmering high)
+          const angle = a * Math.PI * 2;
+          const radiusW = Math.sqrt(b) * (w * 0.42);
+          const radiusH = Math.sqrt(c) * (h * 0.26);
+          x = xCenter + Math.cos(angle) * radiusW;
+          y = h * 0.12 + Math.sin(angle) * radiusH;
+          z = (d - 0.5) * 1.5;
+          scale = mobile ? 0.042 : 0.054;
+        }
       } else if(mode === 'archivist') {
         x=(a-.5)*w*.92; y=(b-.5)*h*.86;
         scale=.025;
       } else if(mode === 'finale') {
-        x=(a-.5)*w*.9; y=-h*.32+b*h*.13; scale=.055;
+        // Sea Waves to Freedom (أمواج بحر فلسطين نحو الحرية)
+        // Particles distributed in flowing depth layers along the Mediterranean horizon
+        const gridCols = Math.ceil(Math.sqrt(count * 1.8));
+        const col = i % gridCols;
+        const row = Math.floor(i / gridCols);
+        const normCol = (col / gridCols) - 0.5;
+        const normRow = row / Math.max(1, Math.floor(count / gridCols));
+
+        x = normCol * w * (mobile ? 1.08 : 1.15);
+        z = normRow * 5.0; // Depth towards the horizon
+        // Base elevation, animated undulating waves in useFrame
+        y = -h * 0.28 + (normRow * 0.15 * h);
+        scale = mobile ? 0.046 : 0.058;
       }
       values[i*4]=x; values[i*4+1]=y; values[i*4+2]=z; values[i*4+3]=scale;
     }
     return values;
   },[count,w,h,size.width,mode,number,palestinePoints,archiveRecords,visibleRecords,query,sort]);
+
   useEffect(() => {
     dirty.current = true; hovered.current=-1;
     useParticleStore.setState({ hoveredRecord: null, hoveredScreenPos: null });
     invalidate();
-    invalidate();
   },[targets,reduced,invalidate]);
+
   useEffect(() => useParticleStore.subscribe((s,prev) => {
     if(s.chapterProgress!==prev.chapterProgress || s.selectedRecord!==prev.selectedRecord || s.mode!==prev.mode) { dirty.current=true; invalidate(); }
   }),[invalidate]);
+
   useEffect(() => {
     const onScroll = () => { dirty.current = true; invalidate(); };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, [invalidate]);
+
   useEffect(() => {
-    const clear = () => { pointer.current={x:-9999,y:-9999}; dirty.current=true; hovered.current=-1; useParticleStore.setState({ hoveredRecord:null, hoveredScreenPos:null }); invalidate(); };
+    const clear = () => {
+      pointer.current={x:-9999,y:-9999};
+      dirty.current=true;
+      hovered.current=-1;
+      useParticleStore.setState({ hoveredRecord:null, hoveredScreenPos:null });
+      invalidate();
+    };
+
+    // Only skip raycasting when strictly touching interactive controls or typing in chat
     const isInteractive = (target: EventTarget | null) => {
       const el = target as Element | null;
-      return Boolean(el && el.closest('button, a, input, select, textarea, dialog, header, nav, article, section, .card, .stat-card, .archive-card, .chapter-heading, .archivist-desk-layout, .name-ribbon, .results-sheet, .archive-console-panel, aside'));
+      return Boolean(el && el.closest('button, a, input, select, textarea, .chat-interface, .archivist-input-wrap, [role="button"]'));
     };
+
     const move = (event: PointerEvent) => {
       if(event.pointerType==='touch') return;
       if(isInteractive(event.target)) { clear(); return; }
-      pointer.current={x:event.clientX,y:event.clientY}; dirty.current=true; invalidate();
+      pointer.current={x:event.clientX,y:event.clientY};
+      dirty.current=true;
+      invalidate();
     };
+
     const tap = (event: PointerEvent) => {
       if(isInteractive(event.target)) return;
-      if(!['scatter','names'].includes(useParticleStore.getState().mode)) return;
+      if(!['number','scatter','names','stats','finale'].includes(useParticleStore.getState().mode)) return;
       let index=-1, distance=144;
       for(let i=0;i<count;i++) {
         const dx=(current.current[i*4]/w+.5)*size.width-event.clientX;
@@ -271,58 +321,129 @@ export default function HumanInstancedMesh() {
       }
       if(index>=0 && visibleRecords[index]) useParticleStore.setState({ selectedRecord:visibleRecords[index] });
     };
+
     window.addEventListener('pointermove',move,{passive:true});
     window.addEventListener('pointerup',tap,{passive:true});
     window.addEventListener('scroll',clear,{passive:true});
     document.addEventListener('pointerleave',clear);
-    return () => { window.removeEventListener('pointermove',move); window.removeEventListener('pointerup',tap); window.removeEventListener('scroll',clear); document.removeEventListener('pointerleave',clear); };
+    return () => {
+      window.removeEventListener('pointermove',move);
+      window.removeEventListener('pointerup',tap);
+      window.removeEventListener('scroll',clear);
+      document.removeEventListener('pointerleave',clear);
+    };
   },[count,visibleRecords,w,h,size.width,size.height,invalidate]);
+
   useEffect(() => () => { geometry.dispose(); material.dispose(); },[geometry,material]);
-  useFrame((_,delta) => {
+
+  useFrame((state, delta) => {
     if(!mesh.current || !count) return;
-    const state = useParticleStore.getState();
+    const pState = useParticleStore.getState();
     const factor = reduced ? 1 : 1-Math.exp(-Math.min(delta,.05)*16);
     let unsettled=false;
-    const pickable=['scatter','names'].includes(mode) && !state.selectedRecord;
-    let pick=-1, distance=100;
+    const time = state.clock.getElapsedTime();
+
+    // Enable hover picking across all primary narrative sections
+    const pickable = ['number','scatter','names','stats','finale'].includes(mode) && !pState.selectedRecord;
+    let pick=-1, distance=140;
+
     if(pickable) for(let i=0;i<count;i++) {
       const dx=(current.current[i*4]/w+.5)*size.width-pointer.current.x;
       const dy=(.5-current.current[i*4+1]/h)*size.height-pointer.current.y;
       const d=dx*dx+dy*dy;
       if(d<distance) {distance=d;pick=i;}
     }
+
     if(pick!==hovered.current) {
       hovered.current=pick;
-      useParticleStore.setState({ hoveredRecord:pick>=0?visibleRecords[pick]:null, hoveredScreenPos:pick>=0?{...pointer.current}:null });
+      useParticleStore.setState({
+        hoveredRecord: pick>=0 ? visibleRecords[pick] : null,
+        hoveredScreenPos: pick>=0 ? { ...pointer.current } : null
+      });
       dirty.current=true;
     }
-    const detach=mode==='number'&&!reduced ? Math.max(0,Math.min(1,(state.chapterProgress-.13)*1.8)) : 0;
+
+    const detach=mode==='number'&&!reduced ? Math.max(0,Math.min(1,(pState.chapterProgress-.13)*1.8)) : 0;
+
     for(let i=0;i<count;i++) {
-      let tx=targets[i*4],ty=targets[i*4+1],tz=targets[i*4+2],ts=targets[i*4+3];
+      let tx=targets[i*4], ty=targets[i*4+1], tz=targets[i*4+2], ts=targets[i*4+3];
+
       if(detach>0) {
         tx=THREE.MathUtils.lerp(tx,(random(i)-.5)*w*.85,detach);
         ty=THREE.MathUtils.lerp(ty,(random(i,1)-.5)*h*.58,detach);
         ts=THREE.MathUtils.lerp(ts,.095,detach);
       }
-      // Gentle dignified highlight without distorting the country borders or ballooning
-      if(i===pick) { ts*=1.15; tz+=0.2; }
+
+      // Mode-specific organic fluid motions
+      if(mode === 'finale') {
+        // Rolling Sea Waves to Freedom: undulating sinusoidal wave harmonics
+        const waveX = tx;
+        const waveZ = tz;
+        const waveY = ty + Math.sin(waveX * 1.5 + waveZ * 0.8 + time * 1.6) * (h * 0.055)
+                         + Math.cos(waveX * 3.1 - time * 2.0) * (h * 0.02);
+        ty = waveY;
+        unsettled = true; // keep wave rolling continuously
+      } else if(mode === 'stats') {
+        // Gentle Mediterranean breeze in the Olive Tree canopy
+        const ratio = i / Math.max(count, 1);
+        if (ratio >= 0.6) {
+          tx += Math.sin(time * 1.4 + i * 0.2) * (w * 0.006);
+          ty += Math.cos(time * 1.8 + i * 0.3) * (h * 0.005);
+          unsettled = true;
+        }
+      }
+
+      // Hover feedback: smooth elevation and scale
+      if(i===pick) {
+        ts *= 1.38;
+        tz += 0.45;
+      }
+
       for(let k=0;k<4;k++) {
         const target=k===0?tx:k===1?ty:k===2?tz:ts, index=i*4+k;
         const diff=target-current.current[index];
         if(Math.abs(diff)>.001) unsettled=true;
         current.current[index]+=diff*factor;
       }
+
       dummy.position.set(current.current[i*4],current.current[i*4+1],current.current[i*4+2]);
-      dummy.scale.setScalar(Math.max(.001,current.current[i*4+3])); dummy.updateMatrix();
+      dummy.scale.setScalar(Math.max(.001,current.current[i*4+3]));
+      dummy.updateMatrix();
       mesh.current.setMatrixAt(i,dummy.matrix);
 
-      // Do NOT fade out all other particles when one is picked
-      const isNumber = mode === 'number';
-      const baseColor = isNumber ? '#3a4437' : (i % 17 === 0 ? '#586b53' : '#7d887a');
-      const highlightColor = '#185d32';
-      color.set(i===pick ? highlightColor : baseColor);
+      // Color styling per mode
+      if (i === pick) {
+        // Highlighting hovered martyr in warm luminous olive-gold
+        color.set('#237337');
+      } else if (mode === 'finale') {
+        // Sea waves to freedom: ocean teal to crest emerald
+        const crest = Math.sin(targets[i*4] * 1.5 + targets[i*4+2] * 0.8 + time * 1.6);
+        if (crest > 0.4) {
+          color.set('#38a3a5'); // wave crest foam
+        } else if (crest > -0.2) {
+          color.set('#22577a'); // Mediterranean sea blue
+        } else {
+          color.set('#1b4332'); // deep ocean green
+        }
+      } else if (mode === 'stats') {
+        // Olive tree palette: trunk/roots vs boughs vs leaves
+        const ratio = i / Math.max(count, 1);
+        if (ratio < 0.28) {
+          color.set(i % 5 === 0 ? '#433b32' : '#3d4438'); // deep bark & earth
+        } else if (ratio < 0.60) {
+          color.set(i % 4 === 0 ? '#4e5b4b' : '#5b6b55'); // olive wood branches
+        } else {
+          color.set(i % 3 === 0 ? '#2d6a4f' : '#40916c'); // living olive leaves
+        }
+      } else if (mode === 'number') {
+        color.set('#3a4437');
+      } else {
+        color.set(i % 17 === 0 ? '#586b53' : '#7d887a');
+      }
+
       mesh.current.setColorAt(i,color);
     }
+
     mesh.current.instanceMatrix.needsUpdate=true;
     if(mesh.current.instanceColor) mesh.current.instanceColor.needsUpdate=true;
     dirty.current=false;
