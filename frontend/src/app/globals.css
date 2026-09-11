@@ -145,92 +145,151 @@ main { position: relative; z-index: 1; }
 .finale-calligraphy-tag strong { color: var(--text-primary); font-weight: 700; font-family: var(--font-poetry); font-size: 18px; }
 .btn-arrow { font-size: 16px; transition: transform 0.2s ease; }
 .bridge-cta-btn:hover .btn-arrow { transform: translate(-3px, 3px); }
-.archivist { min-height: 105svh; overflow: hidden; } .archivist-heading { position: relative; z-index: 2; text-align: center; max-width: 680px; margin: 0 auto; } .archivist-heading h2 { text-shadow: 0 0 24px rgba(247, 245, 238, 0.95); }
+.archivist { min-height: 105svh; overflow: hidden; } 
+.archivist-heading { position: relative; z-index: 2; text-align: center; max-width: 680px; margin: 0 auto; }
+.archivist-heading h2 { font-size: clamp(32px, 4.2vw, 48px); margin: 6px 0 12px; color: var(--text-primary); }
 
-/* ─── State 1: Unified Archival Desk & Folio (B&W Portrait + Integrated Chat) ─── */
-.archivist-bw-image {
-  filter: grayscale(100%) contrast(1.15) brightness(0.95);
-  transition: filter 0.4s ease;
-}
-
+/* ─── State 1: Dignified Archival Dossier Folio (Vector Seal + Authentic Ledger) ─── */
 .archivist-folio {
   display: grid;
-  grid-template-columns: 360px 1fr;
-  max-width: 920px;
+  grid-template-columns: 340px 1fr;
+  max-width: 940px;
   margin: 38px auto 0;
   background: var(--bg-paper);
   border: 1px solid var(--border-paper);
-  box-shadow: 0 16px 48px rgba(41, 45, 40, 0.08);
+  box-shadow: 0 14px 44px rgba(41, 45, 40, 0.07);
   border-radius: 4px;
   overflow: hidden;
 }
 
-.folio-portrait-col {
-  padding: 24px;
-  background: #f4f0e4;
+.folio-dossier-col {
+  padding: 26px 24px;
+  background: #f7f4eb;
   border-inline-end: 1px solid var(--border-paper);
   display: flex;
   flex-direction: column;
+}
+
+.folio-dossier-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   justify-content: space-between;
   gap: 18px;
 }
 
-.folio-portrait-frame {
-  position: relative;
-  margin: 0;
-  border: 1px solid var(--border-medium);
-  border-radius: 3px;
-  overflow: hidden;
-  background: #242923;
-  box-shadow: 0 8px 24px rgba(41, 45, 40, 0.12);
+.dossier-header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-paper);
+  padding-bottom: 10px;
 }
 
-.folio-portrait-frame img {
-  width: 100%;
-  height: auto;
-  display: block;
-  object-fit: cover;
+.dossier-flag-mark {
+  font-size: 15px;
 }
 
-.folio-portrait-frame:hover .archivist-bw-image {
-  filter: grayscale(80%) contrast(1.12) brightness(0.98);
-}
-
-.folio-watermark-seal {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  background: rgba(26, 30, 26, 0.8);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 4px 10px;
-  border-radius: 2px;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.25;
-  pointer-events: none;
-}
-
-.seal-tag {
-  font-size: 10px;
+.dossier-header-title {
+  font-size: 12px;
   font-family: var(--font-arabic);
   font-weight: 600;
-  color: #f2e9d2;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
 }
 
-.seal-code {
-  font-size: 8px;
+.dossier-seal-showcase {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 0;
+}
+
+/* ─── Archival Seal SVG Styling ─── */
+.archival-seal-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.archival-seal-wrap:hover {
+  transform: rotate(2deg) scale(1.02);
+}
+
+.archival-seal-svg {
+  filter: drop-shadow(0 4px 10px rgba(67, 97, 72, 0.12));
+}
+
+.seal-svg-text-primary {
+  font-size: 8.5px;
+  font-weight: 700;
+  font-family: var(--font-arabic);
+  letter-spacing: 0.03em;
+}
+
+.seal-svg-text-secondary {
+  font-size: 6.8px;
   font-family: var(--font-mono);
-  letter-spacing: 0.1em;
-  color: rgba(255, 255, 255, 0.75);
+  letter-spacing: 0.08em;
+  font-weight: 500;
 }
 
-.folio-portrait-meta {
+.seal-center-title {
+  font-size: 23px;
+  font-weight: 700;
+  font-family: var(--font-poetry);
+}
+
+.seal-center-sub {
+  font-size: 9px;
+  font-weight: 600;
+  font-family: var(--font-arabic);
+  letter-spacing: 0.06em;
+}
+
+.dossier-credentials {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  padding: 10px 12px;
+}
+
+.dossier-ref-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.dossier-ref-label {
+  color: var(--text-muted);
+}
+
+.dossier-ref-val {
+  font-family: var(--font-mono);
+  color: var(--text-secondary);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+}
+
+.dossier-ref-status {
+  font-weight: 600;
+  color: var(--accent-green);
+  font-size: 11px;
+}
+
+.folio-archivist-quote {
+  font: 13.5px/1.7 var(--font-poetry);
+  color: var(--text-secondary);
+  margin: 0;
+  padding: 10px 12px;
+  border-inline-start: 2px solid var(--accent-green);
+  background: rgba(67, 97, 72, 0.04);
+  border-radius: 0 2px 2px 0;
 }
 
 .folio-live-status {
@@ -240,7 +299,7 @@ main { position: relative; z-index: 1; }
   font-size: 11px;
   color: var(--accent-green);
   background: rgba(67, 97, 72, 0.08);
-  border: 1px solid rgba(67, 97, 72, 0.24);
+  border: 1px solid rgba(67, 97, 72, 0.22);
   padding: 4px 10px;
   border-radius: 14px;
   width: fit-content;
@@ -258,12 +317,6 @@ main { position: relative; z-index: 1; }
   0% { box-shadow: 0 0 0 0 rgba(67, 97, 72, 0.6); }
   70% { box-shadow: 0 0 0 8px rgba(67, 97, 72, 0); }
   100% { box-shadow: 0 0 0 0 rgba(67, 97, 72, 0); }
-}
-
-.folio-archivist-quote {
-  font: 14px/1.7 var(--font-poetry);
-  color: var(--text-secondary);
-  margin: 0;
 }
 
 .folio-desk-col {
@@ -297,34 +350,41 @@ main { position: relative; z-index: 1; }
 
 .folio-label {
   display: block;
-  font: 22px/1.45 var(--font-poetry);
+  font: 20px/1.5 var(--font-poetry);
   color: var(--text-primary);
 }
 
 .folio-textarea-wrap {
   border: 1px solid var(--border-paper);
-  background: repeating-linear-gradient(transparent 0, transparent 33px, #deded388 34px);
-  padding: 4px 12px;
-  border-radius: 2px;
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.02);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .folio-textarea-wrap:focus-within {
   border-color: var(--accent-green);
-  box-shadow: 0 0 0 3px rgba(67, 97, 72, 0.12);
+  box-shadow: 0 0 0 3px rgba(67, 97, 72, 0.12), inset 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .folio-textarea-wrap textarea {
   width: 100%;
-  min-height: 90px;
+  min-height: 95px;
   resize: vertical;
   border: 0;
   background: transparent;
-  line-height: 34px;
+  line-height: 1.8;
   font-size: 15px;
   padding: 0;
   color: var(--text-primary);
   outline: none;
+  font-family: var(--font-arabic);
+}
+
+.folio-textarea-wrap textarea::placeholder {
+  color: #9da39b;
+  font-size: 14px;
 }
 
 .folio-action-bar {
@@ -369,6 +429,19 @@ main { position: relative; z-index: 1; }
   cursor: not-allowed;
   opacity: 0.75;
   box-shadow: none;
+}
+
+.btn-loading-dot {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: btn-spin 0.8s linear infinite;
+}
+
+@keyframes btn-spin {
+  to { transform: rotate(360deg); }
 }
 
 .send-arrow {
@@ -459,23 +532,21 @@ main { position: relative; z-index: 1; }
 }
 
 .dialogue-avatar {
-  width: 56px;
-  height: 56px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   overflow: hidden;
   border: 2px solid var(--accent-green);
-  box-shadow: 0 4px 14px rgba(67, 97, 72, 0.2);
+  box-shadow: 0 4px 14px rgba(67, 97, 72, 0.18);
   flex-shrink: 0;
-  background: #f4f0e4;
+  background: #f7f4eb;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.dialogue-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+.avatar-seal-mini {
+  transform: scale(0.9);
 }
 
 .dialogue-avatar.is-responding {
@@ -494,17 +565,17 @@ main { position: relative; z-index: 1; }
   height: 35px;
 }
 
-.dialogue-archivist-badge strong {
+.dialogue-badge-text strong {
   display: block;
-  font: 19px var(--font-poetry);
+  font: 18px var(--font-poetry);
   color: var(--text-primary);
 }
 
-.dialogue-archivist-badge span {
+.dialogue-badge-text span {
   display: block;
   font-size: 11px;
   color: var(--text-muted);
-  font-family: var(--font-mono);
+  font-family: var(--font-arabic);
 }
 
 .dialogue-reset-btn {
@@ -822,7 +893,7 @@ main { position: relative; z-index: 1; }
   .statistics-heading { display: block; } .statistics-insight { margin-top: 24px; max-width: 100%; } .statistics-insight strong { display: inline; margin-inline-end: 12px; font-size: 34px; } .people-chart { height: 300px; gap: 6px; margin-top: 32px; } .bar-label,.bar-count { font-size: 10px; } .chart-caption { flex-direction: column; gap: 12px; font-size: 10px; }
   .archivist-layout { grid-template-columns: 1fr; gap: 40px; margin-top: 32px; } .archivist-art { order: 0; max-width: 350px; margin: 0 auto; } .archivist-art img { width: 110%; margin-inline-start: -5%; } .archivist-art figcaption { font-size: 10px; } .letter { padding: 24px; transform: none; } .letter label { font-size: 26px; } .paper-prompts { gap: 8px; } .paper-prompts button { font-size: 11px; padding: 10px; } .letter-answer { font-size: 19px; }
   .archivist-folio { grid-template-columns: 1fr; margin-top: 24px; }
-  .folio-portrait-col { border-inline-end: 0; border-bottom: 1px solid var(--border-paper); padding: 20px; }
+  .folio-dossier-col { border-inline-end: 0; border-bottom: 1px solid var(--border-paper); padding: 20px; }
   .folio-desk-col { padding: 24px 20px; }
   .archivist-dialogue-sheet { padding: 24px 20px; }
   .stats-split-layout { flex-direction: column; }

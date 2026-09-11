@@ -1,9 +1,9 @@
 'use client';
-import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { api } from '@/lib/api';
 import { useParticleStore } from '@/lib/particleStore';
 import type { AgentResponse } from '@/lib/types';
+import ArchivalSeal from './ArchivalSeal';
 
 const suggestions = [
   'كم عدد الأطفال المسجلين في الأرشيف؟',
@@ -15,6 +15,7 @@ const suggestions = [
 /**
  * Animated Peace Dove (حمامة السلام) carrying an olive branch.
  * Pure GPU-accelerated vector SVG with fluttering wings and gentle glide.
+ * Lightweight, zero-dependency, ultra-smooth 60fps animation.
  */
 function PeaceDoveAnimation({ className = '' }: { className?: string }) {
   return (
@@ -122,55 +123,61 @@ export default function ArchivistLetterScene() {
   return (
     <section id="archivist" className="chapter archivist" aria-labelledby="archivist-title">
       <div className="archivist-heading">
-        <span className="eyebrow">04 — محاورة حارس الأرشيف</span>
-        <h2 id="archivist-title">اسأل <em>حارس الأرشيف.</em></h2>
+        <span className="eyebrow">04 — سِجل الذاكرة الحيّة</span>
+        <h2 id="archivist-title">استنطاق وثائق الذاكرة.</h2>
         <p className="micro-copy">
-          مساعد أرشيفي ذكي يستحضر السجلات الموثقة بالاسم والعمر والعائلة، ويجيبك بوقارٍ وتوثيقٍ دقيق.
+          سِجلّ تاريخي يوثّق شهداء فلسطين بالاسم والعمر والعائلة، مستحضراً كل حياةٍ كأثرٍ خالد لا يُمحى.
         </p>
       </div>
 
       {!isDialogue ? (
-        /* ─── State 1: Unified Archival Desk & Folio (Portrait Seamlessly Bound with Chat) ─── */
+        /* ─── State 1: Dignified Archival Dossier Folio & Inscription Desk ─── */
         <div className="archivist-folio">
-          {/* Visual / Identity Column: Black & White Archival Portrait with Matte Frame */}
-          <div className="folio-portrait-col">
-            <figure className="folio-portrait-frame">
-              <Image
-                src="/archivist.jpg"
-                alt="حارس الأرشيف الفلسطيني الوقور بين وثائق الذاكرة والمخطوطات"
-                width={700}
-                height={460}
-                className="archivist-bw-image"
-                sizes="(max-width: 820px) 100vw, 380px"
-                priority
-              />
-              <div className="folio-watermark-seal">
-                <span className="seal-tag">سِجل الذاكرة</span>
-                <span className="seal-code">ARCHIVE · 1948–2026</span>
+          {/* Visual / Archival Column: Authentic Embossed Archival Dossier Plate */}
+          <div className="folio-dossier-col">
+            <div className="folio-dossier-card">
+              <div className="dossier-header-badge">
+                <span className="dossier-flag-mark" aria-hidden="true">🇵🇸</span>
+                <span className="dossier-header-title">سِجل الذاكرة الوطنية</span>
               </div>
-            </figure>
-            
-            <div className="folio-portrait-meta">
+
+              {/* Handcrafted Vector Archival Seal */}
+              <div className="dossier-seal-showcase">
+                <ArchivalSeal size={135} />
+              </div>
+
+              <div className="dossier-credentials">
+                <div className="dossier-ref-row">
+                  <span className="dossier-ref-label">رقم القيد الأرشيفي:</span>
+                  <span className="dossier-ref-val">DOC-REF · PS-1948-2026</span>
+                </div>
+                <div className="dossier-ref-row">
+                  <span className="dossier-ref-label">حالة التوثيق:</span>
+                  <span className="dossier-ref-status">سِجل معتمد دائم</span>
+                </div>
+              </div>
+
+              <blockquote className="folio-archivist-quote">
+                «النسيان فناءٌ مؤجل، والذاكرة بقاءٌ حيّ. كُلّ اسمٍ هنا ليس رقماً في إحصاء، بل إنسانٌ له قصة وأهل وأرض.»
+              </blockquote>
+
               <div className="folio-live-status">
                 <span className="status-live-beacon" aria-hidden="true" />
-                <span>حارس السجلات في انتظار استفسارك</span>
+                <span>السجل متاح للاستعلام التوثيقي اللحظي</span>
               </div>
-              <p className="folio-archivist-quote">
-                «كل اسمٍ هنا، حياةٌ ووطنٌ لا يُمحى من سفر الخلود.»
-              </p>
             </div>
           </div>
 
-          {/* Interactive Column: The Letter Desk Console */}
+          {/* Interactive Column: The Archival Query Desk Console */}
           <div className="folio-desk-col">
             <form className="folio-form" onSubmit={e => { e.preventDefault(); ask(query); }}>
               <div className="folio-form-header">
-                <span className="folio-form-tag">مكتب التوثيق المباشر</span>
-                <bdi className="folio-form-id">DOC / ARCHIVE INQUIRY</bdi>
+                <span className="folio-form-tag">سجل الاستعلام الأرشيفي المباشر</span>
+                <bdi className="folio-form-id">FOLIO INQUIRY · LIVE ARCHIVE</bdi>
               </div>
 
               <label htmlFor="archivist-query" className="folio-label">
-                ماذا تريد أن تعرف عن سجلات الشهداء وعائلاتهم؟
+                ماذا تريد أن تستحضر من سجلات الشهداء وعائلاتهم؟
               </label>
 
               <div className="folio-textarea-wrap">
@@ -179,7 +186,7 @@ export default function ArchivistLetterScene() {
                   id="archivist-query"
                   value={query}
                   onChange={e => setQuery(e.target.value)}
-                  placeholder="اكتب اسم شخص أو عائلة، أو اسأل عن الرضّع، أو اطلب إحصاءات عائلة معينة…"
+                  placeholder="اكتب اسم شهيد أو عائلة، أو اسأل عن الرضّع، أو اطلب إحصاءات عائلة معينة في الأرشيف…"
                   maxLength={400}
                 />
               </div>
@@ -187,18 +194,27 @@ export default function ArchivistLetterScene() {
               <div className="folio-action-bar">
                 <button
                   type="submit"
-                  className="folio-send-btn"
+                  className={`folio-send-btn ${loading ? 'is-loading' : ''}`}
                   disabled={loading || !query.trim()}
                 >
-                  <span>استفسر من الحارس</span>
-                  <span className="send-arrow" aria-hidden="true">←</span>
+                  {loading ? (
+                    <>
+                      <span className="btn-loading-dot" aria-hidden="true" />
+                      <span>جارٍ استحضار السجلات…</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>استنطاق السجل الأرشيفي</span>
+                      <span className="send-arrow" aria-hidden="true">←</span>
+                    </>
+                  )}
                 </button>
-                <span className="folio-privacy-note">استعلام آمن ولحظي من قاعدة البيانات الوطنية</span>
+                <span className="folio-privacy-note">استعلام تاريخي مباشر من قاعدة السجلات الوطنية</span>
               </div>
             </form>
 
-            <div className="folio-prompts-tray" aria-label="رسائل مقترحة للاستفسار">
-              <span className="prompts-tag">استفسارات أرشيفية مقترحة:</span>
+            <div className="folio-prompts-tray" aria-label="نماذج استفسارات أرشيفية">
+              <span className="prompts-tag">استفسارات مقترحة لاستكشاف الأرشيف:</span>
               <div className="prompts-list">
                 {suggestions.map(prompt => (
                   <button
@@ -220,7 +236,7 @@ export default function ArchivistLetterScene() {
           </div>
         </div>
       ) : (
-        /* ─── State 2: Dedicated Dialogue Sheet Mode with Peace Dove Responder ─── */
+        /* ─── State 2: Dedicated Archival Dialogue Sheet Mode with Peace Dove Responder ─── */
         <div className="archivist-dialogue-sheet">
           <div className="dialogue-header">
             <div className="dialogue-archivist-badge">
@@ -228,28 +244,22 @@ export default function ArchivistLetterScene() {
                 {loading ? (
                   <PeaceDoveAnimation className="avatar-dove-anim" />
                 ) : (
-                  <Image
-                    src="/archivist.jpg"
-                    alt="حارس الأرشيف"
-                    width={64}
-                    height={64}
-                    className="archivist-bw-image"
-                  />
+                  <ArchivalSeal size={46} className="avatar-seal-mini" />
                 )}
               </div>
-              <div>
-                <strong>{loading ? 'حمامة الذاكرة تبحث في السجلات…' : 'رد حارس الأرشيف الموثق'}</strong>
-                <span>{loading ? 'استحضار وتوثيق السجلات' : 'مستشار الذاكرة لسجلات شهداء فلسطين'}</span>
+              <div className="dialogue-badge-text">
+                <strong>{loading ? 'حمامة الذاكرة تبحث في السجلات…' : 'وثيقة الرد الأرشيفي الموثق'}</strong>
+                <span>{loading ? 'استحضار وتوثيق قيود الشهداء' : 'مستخرج معتمد من السجل الوطني لشهداء فلسطين'}</span>
               </div>
             </div>
             <button type="button" className="dialogue-reset-btn" onClick={resetView}>
-              ↺ سؤال جديد / العودة للمكتب
+              ↺ استعلام جديد / العودة للمكتب
             </button>
           </div>
 
           {lastQuestion && (
             <div className="dialogue-user-query">
-              <span className="query-tag">استفسارك:</span>
+              <span className="query-tag">استفسارك الأرشيفي:</span>
               <p>«{lastQuestion}»</p>
             </div>
           )}
@@ -260,14 +270,14 @@ export default function ArchivistLetterScene() {
                 <PeaceDoveAnimation />
                 <div className="dove-working-prose">
                   <strong>حمامة الذاكرة تطوف بين سجلات الخلود…</strong>
-                  <span>حارس الأرشيف يستشير وثائق الشهداء المعتمدة للإجابة بدقة ووقار</span>
+                  <span>نستحضر قيود السجل الوطني المعتمد لتوثيق الإجابة بوقار ودقة</span>
                 </div>
               </div>
             )}
 
             {error && (
               <div className="feedback error">
-                تعذّر استرجاع الرد من الوكيل. يمكنك إعادة المحاولة بالضغط على الزر أدناه.
+                تعذّر استرجاع الرد الأرشيفي حالياً. يمكنك إعادة المحاولة بالضغط على الزر أدناه.
                 <button type="button" className="text-link" onClick={() => ask(lastQuestion)}>
                   إعادة المحاولة ↺
                 </button>
@@ -277,16 +287,16 @@ export default function ArchivistLetterScene() {
             {response && (
               <div className="dialogue-content">
                 <div className="agent-meta">
-                  <span className="eyebrow">وثيقة رد موثقة</span>
+                  <span className="eyebrow">بيان السجل المعتمد</span>
                   {response.tools_used?.length > 0 && (
                     <div className="agent-tools">
                       {response.tools_used.map((t, i) => (
                         <span key={i} className="tool-chip">
-                          {t.tool === 'search_by_name' && '🔍 بحث خطي بالاسم Linear Search O(n)'}
-                          {t.tool === 'search_by_age' && '🎯 بحث ثنائي بالعمر Binary Search O(log n)'}
-                          {t.tool === 'sort_by_age' && '⚡ ترتيب الأعمار Quick Sort O(n log n)'}
-                          {t.tool === 'sort_by_name' && '🔤 ترتيب أبجدي Merge Sort O(n log n)'}
-                          {t.tool === 'get_archive_statistics' && '📊 استعلام إحصاءات الأرشيف'}
+                          {t.tool === 'search_by_name' && '🔍 استعلام دقيق بالاسم'}
+                          {t.tool === 'search_by_age' && '🎯 فرز السجلات بالفئة العمرية'}
+                          {t.tool === 'sort_by_age' && '⚡ تصنيف زمني وتدقيق الأعمار'}
+                          {t.tool === 'sort_by_name' && '🔤 فهرسة هجائية للعائلات'}
+                          {t.tool === 'get_archive_statistics' && '📊 بيان الإحصاءات الأرشيفية'}
                           {t.execution_time_ms !== undefined && (
                             <bdi> ({t.execution_time_ms} ms)</bdi>
                           )}
@@ -302,7 +312,7 @@ export default function ArchivistLetterScene() {
 
                 {response.records && response.records.length > 0 && (
                   <div className="agent-records-tray">
-                    <span className="tray-title">سجلات حقيقية وردت في هذا الرد (اضغط لقراءة السجل الكامل):</span>
+                    <span className="tray-title">قيود حقيقية استُحضرت في هذا التوثيق (اضغط لقراءة السجل الكامل):</span>
                     <div className="tray-items">
                       {response.records.map(r => (
                         <button
@@ -320,7 +330,7 @@ export default function ArchivistLetterScene() {
                 )}
 
                 <p className="technical-note" dir="rtl">
-                  توثيق مستخرج لحظياً من السجل الوطني لشهداء فلسطين ({response.tools_used.length > 0 ? 'بحث وتدقيق خوارزمي' : 'استخلاص أرشيفي مباشر'})
+                  وثيقة مستخرجة لحظياً من السجل الوطني لشهداء فلسطين — صيانة الذاكرة وفاءٌ لأصحابها.
                 </p>
               </div>
             )}

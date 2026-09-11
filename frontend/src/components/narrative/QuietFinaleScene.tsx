@@ -14,16 +14,15 @@ export default function QuietFinaleScene() {
         </h2>
       </div>
 
-      {/* ─── Darwish Quote — Palestinian Flag Colors ─── */}
-      <blockquote className="flag-quote" aria-label="اقتباس محمود درويش">
+      {/* ─── Quote — Palestinian Flag Colors ─── */}
+      <blockquote className="flag-quote" aria-label="اقتباس">
         <p className="flag-quote-text">
-          <span className="fq-green">على هذه الأرض</span>{' '}
-          <span className="fq-white">ما يستحقّ</span>{' '}
-          <span className="fq-red">الحياة</span>
+          <span className="fq-green">النسيان هو الموت المشتهى،</span>{' '}
+          <span className="fq-white">ولكن الذاكرة</span>{' '}
+          <span className="fq-red">لا تموت.</span>
         </p>
         <footer className="flag-quote-attr">
           <span className="fq-dash" aria-hidden="true" />
-          <cite>محمود درويش</cite>
         </footer>
       </blockquote>
 
