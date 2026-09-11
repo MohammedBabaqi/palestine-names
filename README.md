@@ -1,153 +1,259 @@
-# أسماء لا تُنسى — Palestinian Names Archive
+<div align="center">
 
-## "From Numbers to Names" — Interactive Data Storytelling
+# 🕊️ أسماء لا تُنسى — Palestinian Names Archive
+### *From Numbers to Names · An Immersive WebGL & AI Living Memorial*
 
-An interactive data story built for a university project on **72,835** Palestinian records.
+[![Next.js 15](https://img.shields.io/badge/Next.js-15.5-000000?style=for-the-badge&logo=nextdotjs&logoColor=white)](https://nextjs.org/)
+[![React 19](https://img.shields.io/badge/React-19.1-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Python 3.14](https://img.shields.io/badge/Python-3.14-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![LangChain](https://img.shields.io/badge/LangChain-v0.3-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://www.langchain.com/)
+[![Three.js](https://img.shields.io/badge/Three.js-WebGL-black?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
+[![OpenRouter](https://img.shields.io/badge/OpenRouter-AI_API-6366F1?style=for-the-badge&logo=openai&logoColor=white)](https://openrouter.ai/)
 
-> "لم تكن أرقامًا. كانت أسماء."
-> *"They were not numbers. They were names."*
+<br />
+
+> **«لم يكونوا أرقامًا. كانوا أشخاصًا. وكان لكل شخص اسم.»**  
+> *"They were never just numbers. They were people, and every person had a name."*
+
+<br />
+
+[📖 Narrative Flow](#-the-narrative-flow) •
+[🤖 AI Archivist](#-ai-archivist-حارس-الأرشيف) •
+[⚙️ Environment Setup](#-environment-variables--api-configuration) •
+[🚀 Quick Start](#-quick-start) •
+[🧮 Algorithms & Big-O](#-algorithms--data-structures) •
+[🎨 Design System](#-design-system--aesthetics)
 
 ---
 
-## Quick Start
+</div>
 
-### 1. Backend (FastAPI)
+<br />
 
-```powershell
-cd backend
-pip install fastapi uvicorn python-multipart pydantic aiofiles
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+## 🌟 Overview
+
+**أسماء لا تُنسى (Palestine Names Archive)** is an award-quality, scroll-driven interactive digital archive honoring **72,835+** documented Palestinian records. 
+
+Departing from conventional dashboards and generic data tables, this project blends **WebGL human instanced mesh particles**, **classical editorial typography**, and an **algorithmic LangChain AI Archivist** to deliver a profound, reverent narrative experience:
+
+```
+                  THE SCROLL-DRIVEN JOURNEY
+                  
+  [ 72,835 NUMBER ]          Cold quantitative statistical weight
+         │
+         ▼
+  [ HUMAN SILHOUETTES ]      72,000+ tiny human figures rendered in WebGL
+         │
+         ▼
+  [ LIVING CONSTELLATION ]   Particles scatter across celestial coordinates
+         │
+         ▼
+  [ ONE SACRED NAME ]        Camera zooms into a single verified life
+         │
+         ▼
+  [ PHYSICAL ARCHIVE ]       Virtualized, searchable algorithmic ledger
+         │
+         ▼
+  [ THE ARCHIVIST DESK ]     LangChain Agent executing real Big-O algorithms
 ```
 
-The backend loads **`killed-in-gaza.csv`** from the project root automatically.
-API docs available at: http://localhost:8000/docs
+---
 
-### 2. Frontend (Next.js)
+## 🔑 Environment Variables & API Configuration
 
+The AI Archivist utilizes **LangChain** with **OpenRouter** to run free or production LLMs connected directly to native Python search & sort algorithms.
+
+### 1. Get an API Key
+Obtain a free or paid API key from [OpenRouter](https://openrouter.ai/keys).
+
+### 2. Configure the Backend `.env`
+Create a `.env` file in the `backend/` directory (or copy `backend/.env.example`):
+
+```bash
+# In the backend directory
+cp .env.example .env
+```
+
+Add your key to `backend/.env`:
+
+```env
+# ==============================================================================
+# OpenRouter API Key for LangChain AI Archivist
+# ==============================================================================
+OPENROUTER_API_KEY=sk-or-v1-your-actual-api-key-here
+```
+
+### 3. Environment Variables Reference
+
+| Variable | Required | Default / Fallback | Description |
+|---|---|---|---|
+| `OPENROUTER_API_KEY` | **Yes** | `""` | OpenRouter authentication token for LLM inference |
+| `FREE_MODELS` | Optional | `inclusionai/ling-3.0-flash-vl:free` | Ordered model fallback pool if upstream limits occur |
+
+> [!NOTE]
+> All `.env` and secret credentials are automatically protected and ignored in version control via [`.gitignore`](.gitignore). A template is provided in [`.env.example`](.env.example) and [`backend/.env.example`](backend/.env.example).
+
+---
+
+## 🤖 AI Archivist (حارس الأرشيف)
+
+The project features **«حارس الأرشيف» (The Archivist)** — an AI conversational agent built with **LangChain**, designed with strict ethical guidelines:
+- 🚫 **Zero Hallucination Policy:** Never fabricates names, ages, or statistics.
+- ⚡ **Tool Execution:** Every inquiry executes real Python algorithms on the 72,835 dataset records.
+- 📜 **State-Adaptive Archival Desk:** Dynamic UI that seamlessly transitions from an editorial greeting into an expanded reading sheet with tool execution chips and clickable record inspect cards.
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Visitor
+    participant UI as Archivist Desk (Next.js)
+    participant Agent as LangChain Agent (FastAPI)
+    participant LLM as OpenRouter (Flash VL)
+    participant Tools as Search & Sort Algorithms (Python)
+
+    User->>UI: "كم عدد الأطفال في الأرشيف؟"
+    UI->>Agent: POST /api/agent/chat
+    Agent->>LLM: Bind tools & infer intent
+    LLM-->>Agent: Call Tool: get_archive_statistics()
+    Agent->>Tools: Execute O(n) demographic scan
+    Tools-->>Agent: Return: 21,637 children (29.7%)
+    Agent->>LLM: Synthesize reverent Arabic response
+    LLM-->>Agent: Final dignified answer
+    Agent-->>UI: Response + Tool Logs + Record Cards
+    UI-->>User: Render parchment letter & verified chips
+```
+
+### Algorithmic Tools Bound to the Agent:
+| Tool Name | Underlying Algorithm | Complexity | Purpose |
+|---|---|---|---|
+| `search_by_name` | Linear Scan | $O(n)$ | Substring search across Arabic & English names |
+| `search_by_age` | Binary Search | $O(\log n)$ | Exact or tolerance search on sorted ages |
+| `sort_by_age` | Quick Sort | $O(n \log n)$ | Partition-based age sorting (youngest / oldest) |
+| `sort_by_name` | Merge Sort | $O(n \log n)$ | Stable alphabetical collation |
+| `get_archive_statistics` | Aggregate Scan | $O(n)$ | Comprehensive demographic metrics & counts |
+
+---
+
+## 🧮 Algorithms & Data Structures
+
+Every sorting and search operation across the **72,835 records** is implemented from algorithmic first principles in pure Python (no pandas):
+
+```
+┌─────────────────────────┬────────────────────────┬─────────────┬──────────────────────────────┐
+│ Operation               │ Algorithm              │ Complexity  │ Characteristics              │
+├─────────────────────────┼────────────────────────┼─────────────┼──────────────────────────────┤
+│ Name Search             │ Linear Search          │ O(n)        │ Multi-token Arabic search    │
+│ Age Search              │ Binary Search          │ O(log n)    │ Presorted index lookup       │
+│ Age Sorting             │ Quick Sort             │ O(n log n)  │ In-place recursive partition │
+│ Name Sorting            │ Merge Sort             │ O(n log n)  │ Stable divide-and-conquer    │
+│ Chronological Sorting   │ Insertion Sort         │ O(n²)       │ Micro-batch demo sorting     │
+└─────────────────────────┴────────────────────────┴─────────────┴──────────────────────────────┘
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18.17+ or v20+)
+- [Python](https://www.python.org/) (v3.10+)
+
+### One-Click Launch (Windows PowerShell)
 ```powershell
+.\start.ps1
+```
+
+---
+
+### Manual Setup
+
+#### 1. Backend (FastAPI + LangChain)
+```bash
+cd backend
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure your OpenRouter API key
+copy .env.example .env
+# Edit .env and paste your OPENROUTER_API_KEY
+
+# Run server
+python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+```
+*API interactive documentation:* [`http://127.0.0.1:8000/docs`](http://127.0.0.1:8000/docs)
+
+#### 2. Frontend (Next.js 15 App Router)
+```bash
 cd frontend
+
+# Install dependencies
 npm install
+
+# Run local development server
 npm run dev
 ```
-
-Open: **http://localhost:3000**
+*Experience the website:* [`http://localhost:3000`](http://localhost:3000)
 
 ---
 
-## Project Structure
+## 🎨 Design System & Aesthetics
+
+Crafted following **Awwwards** and **Magic UI** design standards:
+- 📜 **Parchment & Editorial Warmth:** Cream ivory backgrounds (`#FAF8F5`, `#F7F5EE`), deep charcoal ink text (`#1C1A17`), and subdued olive green accents (`#2D4A3E`).
+- 👥 **Human Particle WebGL Mesh:** Rather than generic circles or sparks, WebGL renders **72,000+ tiny 2D human silhouettes** with individual coordinates, breathing animations, and scroll-reactive dispersion.
+- 📖 **State-Adaptive Layout:** Smooth fluid transitions between visual hero scenes, virtualized record drawers, and the Archivist's dialogue desk.
+- ♿ **Inclusive & Accessible:** RTL native layout with `dir="rtl"`, full keyboard navigation, text halos against 3D canvas scrims, and semantic HTML5 hierarchy.
+
+---
+
+## 📁 Repository Structure
 
 ```
-palestine_names/
-├── killed-in-gaza.csv          ← Real dataset (72,835 records)
+palestine-names/
+├── 📄 .env.example             # Root environment variables template
+├── 📄 .gitignore               # Comprehensive Git ignore rules
+├── 📄 killed-in-gaza.csv       # Primary dataset (72,835 records)
+├── 📄 start.ps1                # Automated startup script
 │
-├── backend/                    ← FastAPI Python backend
-│   ├── main.py                 ← App entry point (CORS configured)
-│   ├── data/
-│   │   └── loader.py           ← CSV loader (pure Python, no pandas)
-│   ├── algorithms/
-│   │   ├── search.py           ← Linear Search O(n), Binary Search O(log n)
-│   │   └── sort.py             ← Merge Sort, Quick Sort, Insertion Sort
-│   └── routers/
-│       └── records.py          ← All API endpoints
+├── 📂 backend/                 # FastAPI & LangChain Application
+│   ├── 📄 .env                 # (Ignored) Secrets & OpenRouter API key
+│   ├── 📄 .env.example         # Backend environment template
+│   ├── 📄 requirements.txt     # Python dependencies
+│   ├── 📄 main.py              # FastAPI entry point & CORS
+│   ├── 📂 algorithms/          # Search (Binary/Linear) & Sort (Merge/Quick)
+│   ├── 📂 data/                # In-memory CSV dataset loader
+│   └── 📂 routers/
+│       ├── records.py          # REST endpoints (72k records, stats, pagination)
+│       └── agent.py            # LangChain AI Archivist & Tool Calling
 │
-└── frontend/                   ← Next.js 14 React frontend
-    └── src/
-        ├── app/
-        │   ├── layout.tsx      ← RTL Arabic layout + SEO metadata
-        │   ├── page.tsx        ← Main page (all sections composed)
-        │   └── globals.css     ← Design system (paper textures, Palestinian accents)
-        ├── lib/
-        │   ├── api.ts          ← API client
-        │   └── types.ts        ← TypeScript types
-        └── components/
-            ├── hero/           ← Giant animated number
-            ├── particles/      ← Canvas particle engine (number → scatter)
-            ├── names/          ← Floating Arabic names cloud
-            ├── impact/         ← Abstract symbolic impact animation
-            ├── one-name/       ← Single person spotlight
-            ├── archive/        ← Virtualized archive list + search
-            ├── algorithms/     ← Sort viz + real data sorting
-            ├── statistics/     ← Data storytelling charts
-            ├── archivist/      ← AI Archivist (حارس الأرشيف)
-            └── finale/         ← Closing scene
+└── 📂 frontend/                # Next.js 15 Interactive Memorial
+    ├── 📂 public/              # Assets (archivist.jpg, SVG icons)
+    └── 📂 src/
+        ├── 📂 app/             # App Router layout, metadata, styles
+        ├── 📂 components/
+        │   ├── 📂 narrative/   # Opening, Living Crowd, Archive, Archivist Desk
+        │   ├── 📂 particles/   # Three.js WebGL Instanced Human Silhouette Mesh
+        │   └── 📂 archive/     # Record modal & verification dialogs
+        └── 📂 lib/             # API client, particle state store, types
 ```
 
 ---
 
-## Dataset Fields
+## 📜 Dataset Citation & Credits
 
-| Field | Description |
-|---|---|
-| `id` | Unique record ID |
-| `en_name` | Name in English |
-| `ar_name` | Name in Arabic |
-| `age` | Age at time of record |
-| `dob` | Date of birth (ISO 8601) |
-| `sex` | `m` (male) / `f` (female) |
-| `update` | Update version |
+- Records compiled from verified official registry records from Gaza, Palestine.
+- Total recorded individuals in this release: **72,835**.
 
 ---
 
-## Algorithms Implemented
+<div align="center">
 
-### Search
-| Algorithm | Complexity | Used For |
-|---|---|---|
-| Linear Search | O(n) | Search by name |
-| Binary Search | O(log n) | Search by age |
-| Linear Scan | O(n) | Search by date range |
+**«الرقم يُحصى، لكن الاسم يُتذكّر.»**  
+*A number is counted, but a name is remembered.*
 
-### Sort
-| Algorithm | Complexity | Used For |
-|---|---|---|
-| Merge Sort | O(n log n) | Sort by name (stable) |
-| Quick Sort | O(n log n) avg | Sort by age (in-place) |
-| Insertion Sort | O(n²) | Sort by date (great for animation) |
+Made with dignity and reverence by **[Mohammed Babaqi](https://github.com/MohammedBabaqi)**
 
----
-
-## API Endpoints
-
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | `/api/records/count` | Total record count |
-| GET | `/api/records?page=1` | Paginated archive |
-| GET | `/api/records/sample?n=200` | Random sample |
-| GET | `/api/records/one-random` | Single random record |
-| GET | `/api/search/name?q=محمد` | Linear search by name |
-| GET | `/api/search/age?age=25` | Binary search by age |
-| GET | `/api/search/date?date_from=1980-01-01` | Date range scan |
-| GET | `/api/sort/name` | Merge sort by name |
-| GET | `/api/sort/age` | Quick sort by age |
-| GET | `/api/sort/date` | Insertion sort by date |
-| GET | `/api/statistics` | Full dataset statistics |
-
----
-
-## Key Statistics (Real Data)
-
-- **72,835** total records
-- **21,637** children under 18 years old
-- **28.7** average age
-- **27** median age
-- **50,959** male / **21,876** female
-- Births recorded from **1914 to 2025**
-
----
-
-## Design Philosophy
-
-This is **not** a dashboard. It is an interactive data archive.
-
-- **White/ivory paper aesthetic** — premium editorial design
-- **Arabic-first, RTL** — IBM Plex Sans Arabic
-- **Palestinian colors as accents only** — green #006233, red #CE1126
-- **Scroll-driven storytelling** — GSAP ScrollTrigger
-- **Canvas particle engine** — number → particles → names
-- **Virtualized lists** — handles 72k records without DOM bloat
-- **No fake algorithms** — every sort and search is real
-
----
-
-*"الرقم يُحصى، لكن الاسم يُتذكّر."*
-*"A number can be counted. A name is remembered."*
+</div>
