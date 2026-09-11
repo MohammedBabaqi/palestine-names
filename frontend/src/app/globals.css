@@ -837,25 +837,216 @@ button[aria-label*="Next.js"] {
 .finale > p { font-size: clamp(26px, 3.2vw, 44px); margin-bottom: 12px; }
 .finale h2 { font-size: clamp(46px, 6.5vw, 92px); }
 .finale-memory-space { height: 42svh; min-height: 260px; }
-.archive-colophon { position: relative; grid-template-columns: 1.1fr 1fr 1fr; align-items: start; margin-top: 0; padding: 44px 32px 40px; gap: 40px; background: var(--bg-paper); border-top: 2px solid var(--accent-green); border-radius: 6px 6px 0 0; font-size: 13px; line-height: 1.9; box-shadow: 0 -16px 60px #292d2805; }
-.archive-colophon .eyebrow { margin-bottom: 12px; font-size: 11px; }
-.colophon-identity > strong { font: 30px/1.5 var(--font-poetry); }
-.colophon-identity p { margin-top: 8px; max-width: 28ch; }
-.colophon-return { display: inline-flex; align-items: center; gap: 16px; min-height: 44px; margin-top: 18px; color: var(--accent-green); border-bottom: 1px solid var(--border-paper); }
-.colophon-developer { gap: 14px; padding-inline: 20px; border-inline: 1px solid var(--border-paper); }
-.colophon-role { font: 12px/1.8 var(--font-arabic); letter-spacing: 0; }
-.archive-colophon .dev-name { font: 600 19px/1.5 var(--font-arabic); }
-.developer-socials { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.developer-socials a { display: inline-flex; align-items: center; gap: 12px; padding: 8px 12px; min-height: 44px; border: 1px solid var(--border-paper); border-radius: 4px; color: var(--accent-green); font: 12px/1.5 var(--font-mono); transition: background var(--duration), border-color var(--duration); }
-.developer-socials a:hover { background: var(--bg-surface); border-color: var(--accent-green); }
-.colophon-meta { text-align: start; }
-.colophon-meta span { margin-top: 24px; font-size: 11px; line-height: 1.9; color: var(--accent-green); }
-@media (max-width: 1000px) {
-  .archive-colophon { grid-template-columns: 1fr 1fr; gap: 32px; }
-  .colophon-developer { border-inline-end: 0; }
-  .colophon-meta { grid-column: 1 / -1; border-top: 1px solid var(--border-paper); padding-top: 24px; display: flex; justify-content: space-between; gap: 24px; }
-  .colophon-meta span { margin-top: 0; }
+/* ─── Starter Palestine Flag Quote Badge ─── */
+.starter-flag-quote-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: rgba(255, 253, 247, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-paper);
+  border-radius: 30px;
+  box-shadow: 0 4px 20px rgba(41, 45, 40, 0.05);
+  margin-bottom: 24px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
+.starter-flag-quote-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #be1e2d 0%, #111827 33%, #dcd9cd 66%, #007a3d 100%);
+}
+.starter-flag-quote-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(41, 45, 40, 0.09);
+  border-color: rgba(67, 97, 72, 0.35);
+}
+
+.flag-miniature {
+  position: relative;
+  width: 22px;
+  height: 15px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  display: flex;
+}
+.flag-stripes-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.flag-stripe {
+  flex: 1;
+}
+.flag-stripe.flag-black {
+  background: #111827;
+}
+.flag-stripe.flag-white {
+  background: #ffffff;
+}
+.flag-stripe.flag-green {
+  background: #007a3d;
+}
+.flag-triangle-red {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 0;
+  height: 0;
+  border-top: 7.5px solid transparent;
+  border-bottom: 7.5px solid transparent;
+  border-right: 9px solid #be1e2d;
+}
+
+.starter-quote-text {
+  font-family: var(--font-poetry);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+.starter-quote-poet {
+  font-family: var(--font-arabic);
+  font-size: 12px;
+  color: var(--accent-green);
+  font-weight: 500;
+}
+
+/* ─── Commemorative Palestine Flag Quote Monument (Finale) ─── */
+.finale-monument-banner {
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto 34px;
+  position: relative;
+  z-index: 2;
+  background: rgba(255, 253, 247, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-paper);
+  border-radius: 12px;
+  padding: 34px 40px;
+  box-shadow: 0 16px 48px rgba(41, 45, 40, 0.06);
+  text-align: center;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.finale-monument-banner:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 56px rgba(41, 45, 40, 0.1);
+}
+
+.flag-ribbon-bar {
+  position: absolute;
+  top: 0;
+  inset-inline: 0;
+  height: 4px;
+  display: flex;
+}
+.flag-ribbon-bar .ribbon-red {
+  flex: 1.2;
+  background: #be1e2d;
+}
+.flag-ribbon-bar .ribbon-black {
+  flex: 1;
+  background: #111827;
+}
+.flag-ribbon-bar .ribbon-white {
+  flex: 1;
+  background: #dcd9cd;
+}
+.flag-ribbon-bar .ribbon-green {
+  flex: 1;
+  background: #007a3d;
+}
+
+.monument-arabic-verse {
+  font-family: var(--font-poetry);
+  font-size: clamp(23px, 2.5vw, 34px);
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin: 0 0 18px;
+  font-weight: 700;
+}
+.monument-arabic-verse .verse-highlight {
+  display: inline-block;
+  color: #1a1a1a;
+  position: relative;
+}
+.monument-arabic-verse .verse-highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  inset-inline: 0;
+  height: 2.5px;
+  background: linear-gradient(90deg, #be1e2d 0%, #111827 35%, #007a3d 100%);
+  border-radius: 2px;
+  opacity: 0.65;
+}
+
+.monument-author-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  background: rgba(247, 245, 238, 0.85);
+  border: 1px solid var(--border-paper);
+  border-radius: 20px;
+}
+.flag-dot-trio {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.flag-dot-trio .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+}
+.flag-dot-trio .dot.red { background: #be1e2d; }
+.flag-dot-trio .dot.green { background: #007a3d; }
+.flag-dot-trio .dot.black { background: #111827; }
+
+.monument-author-name {
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  font-style: normal;
+}
+.monument-source-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* Flag Pip Badge in Colophon */
+.flag-pip-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-inline-end: 2px;
+}
+.flag-pip-badge i {
+  width: 3.5px;
+  height: 10px;
+  border-radius: 1px;
+  display: inline-block;
+}
+.flag-pip-badge .pip-r { background: #be1e2d; }
+.flag-pip-badge .pip-k { background: #111827; }
+.flag-pip-badge .pip-w { background: #c5c2b3; }
+.flag-pip-badge .pip-g { background: #007a3d; }
 @media (max-width: 760px) {
   .masthead { height: 80px; inset-inline: 16px; gap: 8px; }
   .masthead-context { display: none; }
@@ -875,9 +1066,12 @@ button[aria-label*="Next.js"] {
   .dialogue-followup-form button { padding: 12px 16px; }
   .finale { padding-top: 120px; }
   .finale-memory-space { height: 36svh; min-height: 220px; }
-  .archive-colophon { grid-template-columns: 1fr; padding: 32px 24px; gap: 28px; margin-inline: -8px; text-align: center; }
+  .starter-flag-quote-badge { padding: 6px 14px; gap: 8px; margin-bottom: 16px; max-width: calc(100vw - 48px); flex-wrap: wrap; justify-content: center; }
+  .starter-quote-text { font-size: 14px; }
+  .finale-monument-banner { padding: 24px 18px; margin-bottom: 24px; }
+  .monument-arabic-verse { font-size: 20px; line-height: 1.6; }
+  .archive-colophon { grid-template-columns: 1fr; padding: 28px 20px; gap: 24px; margin-inline: -8px; text-align: center; }
   .colophon-identity p { margin-inline: auto; }
-  .colophon-developer { border-inline: 0; border-block: 1px solid var(--border-paper); padding: 24px 0; }
-  .colophon-meta { grid-column: auto; display: block; border: 0; padding: 0; text-align: center; }
-  .colophon-meta span { margin-top: 20px; }
+  .colophon-developer { border-inline: 0; border-block: 1px solid var(--border-paper); padding: 20px 0; }
+  .colophon-action { align-items: center; text-align: center; }
 }
