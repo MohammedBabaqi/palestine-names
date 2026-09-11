@@ -250,15 +250,19 @@ export default function HumanInstancedMesh() {
   }, [invalidate]);
   useEffect(() => {
     const clear = () => { pointer.current={x:-9999,y:-9999}; dirty.current=true; hovered.current=-1; useParticleStore.setState({ hoveredRecord:null, hoveredScreenPos:null }); invalidate(); };
+    const isInteractive = (target: EventTarget | null) => {
+      const el = target as Element | null;
+      return Boolean(el && el.closest('button, a, input, select, textarea, dialog, header, nav, article, section, .card, .stat-card, .archive-card, .chapter-heading, .archivist-desk-layout, .name-ribbon, .results-sheet, .archive-console-panel, aside'));
+    };
     const move = (event: PointerEvent) => {
       if(event.pointerType==='touch') return;
-      if((event.target as Element).closest('button,a,input,select,textarea,dialog,header')) { clear(); return; }
+      if(isInteractive(event.target)) { clear(); return; }
       pointer.current={x:event.clientX,y:event.clientY}; dirty.current=true; invalidate();
     };
     const tap = (event: PointerEvent) => {
-      if((event.target as Element).closest('button,a,input,select,textarea,dialog,header')) return;
-      if(!['scatter','names','archive'].includes(useParticleStore.getState().mode)) return;
-      let index=-1, distance=225;
+      if(isInteractive(event.target)) return;
+      if(!['scatter','names'].includes(useParticleStore.getState().mode)) return;
+      let index=-1, distance=144;
       for(let i=0;i<count;i++) {
         const dx=(current.current[i*4]/w+.5)*size.width-event.clientX;
         const dy=(.5-current.current[i*4+1]/h)*size.height-event.clientY;
@@ -279,8 +283,8 @@ export default function HumanInstancedMesh() {
     const state = useParticleStore.getState();
     const factor = reduced ? 1 : 1-Math.exp(-Math.min(delta,.05)*16);
     let unsettled=false;
-    const pickable=['scatter','names','archive'].includes(mode) && !state.selectedRecord;
-    let pick=-1, distance=144;
+    const pickable=['scatter','names'].includes(mode) && !state.selectedRecord;
+    let pick=-1, distance=100;
     if(pickable) for(let i=0;i<count;i++) {
       const dx=(current.current[i*4]/w+.5)*size.width-pointer.current.x;
       const dy=(.5-current.current[i*4+1]/h)*size.height-pointer.current.y;
@@ -293,17 +297,15 @@ export default function HumanInstancedMesh() {
       dirty.current=true;
     }
     const detach=mode==='number'&&!reduced ? Math.max(0,Math.min(1,(state.chapterProgress-.13)*1.8)) : 0;
-    const archiveRect=mode==='archive'?document.querySelector('.archive-stage')?.getBoundingClientRect():null;
-    const archiveY=archiveRect ? (.5-(archiveRect.top+archiveRect.height/2)/size.height)*h : -h*.07;
     for(let i=0;i<count;i++) {
       let tx=targets[i*4],ty=targets[i*4+1],tz=targets[i*4+2],ts=targets[i*4+3];
-      if(mode==='archive') ty+=archiveY+h*.07;
       if(detach>0) {
         tx=THREE.MathUtils.lerp(tx,(random(i)-.5)*w*.85,detach);
         ty=THREE.MathUtils.lerp(ty,(random(i,1)-.5)*h*.58,detach);
         ts=THREE.MathUtils.lerp(ts,.095,detach);
       }
-      if(i===pick) { ts*=1.65; tz+=2; }
+      // Gentle dignified highlight without distorting the country borders or ballooning
+      if(i===pick) { ts*=1.15; tz+=0.2; }
       for(let k=0;k<4;k++) {
         const target=k===0?tx:k===1?ty:k===2?tz:ts, index=i*4+k;
         const diff=target-current.current[index];
@@ -313,13 +315,12 @@ export default function HumanInstancedMesh() {
       dummy.position.set(current.current[i*4],current.current[i*4+1],current.current[i*4+2]);
       dummy.scale.setScalar(Math.max(.001,current.current[i*4+3])); dummy.updateMatrix();
       mesh.current.setMatrixAt(i,dummy.matrix);
-      const matching=mode==='archive'&&(query.trim()||sort!=='none')&&matchIds.has(visibleRecords[i]?.id);
-      const faint=mode==='archivist'||mode==='stats'||(pick>=0&&i!==pick)||(mode==='archive'&&(query.trim()||sort!=='none')&&!matching);
+
+      // Do NOT fade out all other particles when one is picked
       const isNumber = mode === 'number';
       const baseColor = isNumber ? '#3a4437' : (i % 17 === 0 ? '#586b53' : '#7d887a');
-      const matchColor = '#185d32';
-      const faintColor = '#d9d7cc';
-      color.set(i===pick||matching ? matchColor : faint ? faintColor : baseColor);
+      const highlightColor = '#185d32';
+      color.set(i===pick ? highlightColor : baseColor);
       mesh.current.setColorAt(i,color);
     }
     mesh.current.instanceMatrix.needsUpdate=true;

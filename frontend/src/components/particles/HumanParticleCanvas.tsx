@@ -22,6 +22,5 @@ export default function HumanParticleCanvas() {
       }} fallback={null}><HumanInstancedMesh /></Canvas></CanvasBoundary>
     </div>
     <div className="canvas-scrim" aria-hidden="true" />
-    {record&&pos&&<div className="person-slip" aria-hidden="true" style={{left:Math.max(16,Math.min(pos.x+20,window.innerWidth-265)),top:Math.max(110,Math.min(pos.y-110,window.innerHeight-160))}}><h3>{record.ar_name||record.en_name}</h3><p><span>{record.age===null?'العمر غير مسجل':record.age===0?'دون عام واحد':record.age+' عامًا'}</span><bdi>№ {record.id}</bdi></p><p>اضغط لقراءة السجل</p></div>}
   </>;
 }

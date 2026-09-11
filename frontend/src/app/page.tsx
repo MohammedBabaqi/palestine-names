@@ -5,8 +5,7 @@ import Navbar from '@/components/Navbar';
 import OpeningNumberScene from '@/components/narrative/OpeningNumberScene';
 import LivingCrowdScene from '@/components/narrative/LivingCrowdScene';
 import DeclarationScene from '@/components/narrative/DeclarationScene';
-import PhysicalDataScene from '@/components/narrative/PhysicalDataScene';
-import LivingArchiveScene from '@/components/narrative/LivingArchiveScene';
+import LivingStatsScene from '@/components/narrative/LivingStatsScene';
 import ArchivistLetterScene from '@/components/narrative/ArchivistLetterScene';
 import QuietFinaleScene from '@/components/narrative/QuietFinaleScene';
 import RecordDialog from '@/components/archive/RecordDialog';
@@ -28,9 +27,16 @@ export default function Home() {
     return () => { alive = false; media.removeEventListener('change', update); };
   }, []);
   return <>
-    <a className="skip-link" href="#archive">انتقل إلى البحث في الأسماء</a>
+    <a className="skip-link" href="#stats">انتقل إلى الإحصاء التوثيقي</a>
     <HumanParticleCanvas /><Navbar />
-    <main id="main-content"><OpeningNumberScene /><LivingCrowdScene /><DeclarationScene /><LivingArchiveScene /><PhysicalDataScene /><ArchivistLetterScene /><QuietFinaleScene /></main>
+    <main id="main-content">
+      <OpeningNumberScene />
+      <LivingCrowdScene />
+      <DeclarationScene />
+      <LivingStatsScene />
+      <ArchivistLetterScene />
+      <QuietFinaleScene />
+    </main>
     <RecordDialog />
   </>;
 }
