@@ -15,7 +15,7 @@ export default function QuietFinaleScene() {
       </div>
 
       {/* ─── Quote — Palestinian Flag Colors ─── */}
-      <blockquote className="flag-quote" aria-label="اقتباس">
+      <blockquote className="flag-quote" aria-label="اقتباس محمود درويش">
         <p className="flag-quote-text">
           <span className="fq-green">النسيان هو الموت المشتهى،</span>{' '}
           <span className="fq-white">ولكن الذاكرة</span>{' '}
@@ -23,6 +23,7 @@ export default function QuietFinaleScene() {
         </p>
         <footer className="flag-quote-attr">
           <span className="fq-dash" aria-hidden="true" />
+          <cite>محمود درويش</cite>
         </footer>
       </blockquote>
 
