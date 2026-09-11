@@ -173,6 +173,31 @@ export default function HumanInstancedMesh() {
     return points;
   }, [count]);
 
+  // Memoized points forming the Arabic Calligraphy of «فلسطين» (Palestine)
+  const palestineCalligraphy = useMemo(() => {
+    if (typeof document === 'undefined') return [];
+    const canvas = document.createElement('canvas');
+    canvas.width = 1600;
+    canvas.height = 600;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return [];
+    ctx.font = 'bold 360px "Amiri", "IBM Plex Sans Arabic", serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('فلسطين', 800, 300);
+    const pixels = ctx.getImageData(0, 0, 1600, 600).data;
+    const points: [number, number][] = [];
+    for (let y = 0; y < 600; y += 4) {
+      for (let x = 0; x < 1600; x += 4) {
+        if (pixels[(y * 1600 + x) * 4 + 3] > 120) {
+          points.push([x, y]);
+        }
+      }
+    }
+    if (!points.length) return [];
+    return Array.from({ length: count }, (_, i) => points[Math.floor((i * points.length) / Math.max(count, 1))]);
+  }, [count]);
+
   const targets = useMemo(() => {
     const values = new Float32Array(count * 4);
     const mobile = size.width < 760;
@@ -216,8 +241,8 @@ export default function HumanInstancedMesh() {
         }
       } else if(mode === 'stats') {
         // Creative 4th Shape: The Olive Tree of Memory & Roots (شجرة الزيتون والذاكرة)
-        // Replaces plain histogram columns with an iconic, sacred Olive Tree of Palestine
-        const xCenter = mobile ? 0 : -w * 0.12;
+        // Positioned in the left open stage, completely separate from the sidebar cards on the right
+        const xCenter = mobile ? 0 : -w * 0.16;
         const ratio = i / Math.max(count, 1);
 
         if (ratio < 0.28) {
@@ -251,24 +276,19 @@ export default function HumanInstancedMesh() {
         x=(a-.5)*w*.92; y=(b-.5)*h*.86;
         scale=.025;
       } else if(mode === 'finale') {
-        // Sea Waves to Freedom (أمواج بحر فلسطين نحو الحرية)
-        // Particles distributed in flowing depth layers along the Mediterranean horizon
-        const gridCols = Math.ceil(Math.sqrt(count * 1.8));
-        const col = i % gridCols;
-        const row = Math.floor(i / gridCols);
-        const normCol = (col / gridCols) - 0.5;
-        const normRow = row / Math.max(1, Math.floor(count / gridCols));
-
-        x = normCol * w * (mobile ? 1.08 : 1.15);
-        z = normRow * 5.0; // Depth towards the horizon
-        // Base elevation, animated undulating waves in useFrame
-        y = -h * 0.28 + (normRow * 0.15 * h);
-        scale = mobile ? 0.046 : 0.058;
+        // Monumental Arabic Calligraphy: «فلسطين» (Palestine) formed by all souls
+        const pt = palestineCalligraphy[i] || [800, 300];
+        const calligW = w * (mobile ? 1.05 : 0.88);
+        const calligH = (calligW / 1600) * 600;
+        x = (pt[0] / 1600 - 0.5) * calligW;
+        y = -(pt[1] / 600 - 0.5) * calligH + (mobile ? -h * 0.04 : -h * 0.01);
+        z = (c - 0.5) * 0.9;
+        scale = mobile ? 0.052 : 0.065;
       }
       values[i*4]=x; values[i*4+1]=y; values[i*4+2]=z; values[i*4+3]=scale;
     }
     return values;
-  },[count,w,h,size.width,mode,number,palestinePoints,archiveRecords,visibleRecords,query,sort]);
+  },[count,w,h,size.width,mode,number,palestinePoints,palestineCalligraphy,archiveRecords,visibleRecords,query,sort]);
 
   useEffect(() => {
     dirty.current = true; hovered.current=-1;
@@ -313,7 +333,7 @@ export default function HumanInstancedMesh() {
 
     const tap = (event: PointerEvent) => {
       if(isInteractive(event.target)) return;
-      if(!['number','scatter','finale'].includes(useParticleStore.getState().mode)) return;
+      if(!['number','scatter','stats','finale'].includes(useParticleStore.getState().mode)) return;
       let index=-1, distance=144;
       for(let i=0;i<count;i++) {
         const dx=(current.current[i*4]/w+.5)*size.width-event.clientX;
@@ -345,8 +365,8 @@ export default function HumanInstancedMesh() {
     let unsettled=false;
     const time = state.clock.getElapsedTime();
 
-    // Disable hover picking in Section 3 (stats) & names so hovering cards never touches particles
-    const pickable = ['number','scatter','finale'].includes(mode) && !pState.selectedRecord;
+    // Enable hover picking in number, scatter, stats (tree), and finale (calligraphy)
+    const pickable = ['number','scatter','stats','finale'].includes(mode) && !pState.selectedRecord;
     let pick=-1, distance=140;
 
     if(pickable) for(let i=0;i<count;i++) {
@@ -378,13 +398,10 @@ export default function HumanInstancedMesh() {
 
       // Mode-specific organic fluid motions
       if(mode === 'finale') {
-        // Rolling Sea Waves to Freedom: undulating sinusoidal wave harmonics
-        const waveX = tx;
-        const waveZ = tz;
-        const waveY = ty + Math.sin(waveX * 1.5 + waveZ * 0.8 + time * 1.6) * (h * 0.055)
-                         + Math.cos(waveX * 3.1 - time * 2.0) * (h * 0.02);
-        ty = waveY;
-        unsettled = true; // keep wave rolling continuously
+        // Living constellation breathing in the calligraphy of Palestine
+        tx += Math.sin(time * 1.5 + i * 0.15) * (w * 0.003);
+        ty += Math.cos(time * 1.8 + i * 0.2) * (h * 0.003);
+        unsettled = true;
       } else if(mode === 'stats') {
         // Gentle Mediterranean breeze in the Olive Tree canopy
         const ratio = i / Math.max(count, 1);
@@ -418,15 +435,8 @@ export default function HumanInstancedMesh() {
         // Highlighting hovered martyr in warm luminous olive-gold
         color.set('#237337');
       } else if (mode === 'finale') {
-        // Sea waves to freedom: ocean teal to crest emerald
-        const crest = Math.sin(targets[i*4] * 1.5 + targets[i*4+2] * 0.8 + time * 1.6);
-        if (crest > 0.4) {
-          color.set('#38a3a5'); // wave crest foam
-        } else if (crest > -0.2) {
-          color.set('#22577a'); // Mediterranean sea blue
-        } else {
-          color.set('#1b4332'); // deep ocean green
-        }
+        // Luminous Arabic Calligraphy of Palestine: eternal emerald & gold accents
+        color.set(i % 11 === 0 ? '#d4af37' : (i % 3 === 0 ? '#1b5e20' : '#2d6a4f'));
       } else if (mode === 'stats') {
         // Olive tree palette: trunk/roots vs boughs vs leaves
         const ratio = i / Math.max(count, 1);
