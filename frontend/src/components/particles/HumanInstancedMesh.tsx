@@ -295,10 +295,12 @@ export default function HumanInstancedMesh() {
       invalidate();
     };
 
-    // Only skip raycasting when strictly touching interactive controls or typing in chat
+    // Only skip raycasting when strictly touching interactive controls or typing in chat, or over cards in section 3
     const isInteractive = (target: EventTarget | null) => {
       const el = target as Element | null;
-      return Boolean(el && el.closest('button, a, input, select, textarea, .chat-interface, .archivist-input-wrap, [role="button"]'));
+      return Boolean(
+        el && el.closest('button, a, input, select, textarea, .stat-trio-card, .generations-spectrum-container, .stats-bottom-ribbon, .one-record, .card, .chat-interface, .archivist-input-wrap, [role="button"]')
+      );
     };
 
     const move = (event: PointerEvent) => {
@@ -311,7 +313,7 @@ export default function HumanInstancedMesh() {
 
     const tap = (event: PointerEvent) => {
       if(isInteractive(event.target)) return;
-      if(!['number','scatter','names','stats','finale'].includes(useParticleStore.getState().mode)) return;
+      if(!['number','scatter','finale'].includes(useParticleStore.getState().mode)) return;
       let index=-1, distance=144;
       for(let i=0;i<count;i++) {
         const dx=(current.current[i*4]/w+.5)*size.width-event.clientX;
@@ -343,8 +345,8 @@ export default function HumanInstancedMesh() {
     let unsettled=false;
     const time = state.clock.getElapsedTime();
 
-    // Enable hover picking across all primary narrative sections
-    const pickable = ['number','scatter','names','stats','finale'].includes(mode) && !pState.selectedRecord;
+    // Disable hover picking in Section 3 (stats) & names so hovering cards never touches particles
+    const pickable = ['number','scatter','finale'].includes(mode) && !pState.selectedRecord;
     let pick=-1, distance=140;
 
     if(pickable) for(let i=0;i<count;i++) {
