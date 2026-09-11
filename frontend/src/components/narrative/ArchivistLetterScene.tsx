@@ -60,10 +60,10 @@ export default function ArchivistLetterScene() {
   return (
     <section id="archivist" className="chapter archivist" aria-labelledby="archivist-title">
       <div className="archivist-heading">
-        <span className="eyebrow">05 — مراسلة الذاكرة · LangChain AI Agent</span>
+        <span className="eyebrow">04 — محاورة حارس الأرشيف</span>
         <h2 id="archivist-title">اسأل <em>حارس الأرشيف.</em></h2>
         <p className="micro-copy">
-          وكيل ذكاء اصطناعي موصول بخوارزميات الأرشيف الفعلية. يبحث، يرتّب، ويوثّق الحقائق قبل أن يجيب.
+          مساعد أرشيفي ذكي يستحضر السجلات الموثقة بالاسم والعمر والعائلة، ويجيبك بوقارٍ وتوثيقٍ دقيق.
         </p>
       </div>
 
@@ -82,26 +82,26 @@ export default function ArchivistLetterScene() {
             </figure>
             <div className="archivist-hero-content">
               <span className="archivist-badge">مكتب التوثيق وحراسة الذاكرة</span>
-              <h3>«كل اسمٍ محفوظ هنا، حياةٌ لا تُمحى»</h3>
+              <h3>«كل اسمٍ هنا، حياةٌ ووطنٌ لا يُمحى»</h3>
               <p>
-                اطرح أي سؤال عن أسماء العائلات، أو اطلب ترتيباً بالأعمار (Quick Sort)، أو استفسر عن أصغر وأكبر الضحايا.
-                يقوم الوكيل باستشارة قاعدة البيانات لحظياً بواسطة خوارزميات البحث والترتيب، ثم يكتب لك رداً موثقاً بوقار.
+                اطرح أي سؤال عن أسماء العائلات، أو اطلب البحث عن اسم معين، أو استفسر عن أصغر وأكبر الشهداء سنّاً.
+                يقوم الحارس باستحضار السجلات الموثقة لحظياً ليقدم لك إجابة وافية بأمانةٍ وإجلال.
               </p>
             </div>
           </div>
 
           <form className="letter archivist-initial-letter" onSubmit={e => { e.preventDefault(); ask(query); }}>
             <div className="letter-head">
-              <span>رسالة استفسار أرشيفي (LangChain Agent)</span>
-              <bdi>INQUIRY / 001</bdi>
+              <span>رسالة استفسار إلى حارس الأرشيف</span>
+              <bdi>سؤال / ARCHIVE</bdi>
             </div>
-            <label htmlFor="archivist-query">ماذا تريد أن تسأل عن الأرشيف وأصحابه؟</label>
+            <label htmlFor="archivist-query">ماذا تريد أن تعرف عن سجلات الشهداء وعائلاتهم؟</label>
             <textarea
               ref={textarea}
               id="archivist-query"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="اكتب اسم شخص أو عائلة، أو اطلب ترتيباً بالعمر، أو اسأل عن إحصاءات الأطفال…"
+              placeholder="اكتب اسم شخص أو عائلة، أو اسأل عن الرضّع، أو اطلب إحصاءات عائلة معينة…"
               maxLength={400}
             />
             <button type="submit" className="text-link" disabled={loading || !query.trim()}>
@@ -139,7 +139,7 @@ export default function ArchivistLetterScene() {
               </div>
               <div>
                 <strong>رد حارس الأرشيف الموثق</strong>
-                <span>وكيل ذكاء اصطناعي موصول بخوارزميات الأرشيف (LangChain)</span>
+                <span>مستشار الذاكرة لسجلات شهداء فلسطين</span>
               </div>
             </div>
             <button type="button" className="dialogue-reset-btn" onClick={resetView}>
@@ -158,7 +158,7 @@ export default function ArchivistLetterScene() {
             {loading && (
               <div className="page-working">
                 <i aria-hidden="true" />
-                <span>حارس الأرشيف يستشير السجلات ويفحص الخوارزميات عبر LangChain (Tool Execution)…</span>
+                <span>حارس الأرشيف يستشير سجلات الشهداء المعتمدة للإجابة بدقة…</span>
               </div>
             )}
 
@@ -216,8 +216,8 @@ export default function ArchivistLetterScene() {
                   </div>
                 )}
 
-                <p className="technical-note" lang="en" dir="ltr">
-                  Engine: LangChain ChatOpenAI · Model: {response.model} · Tools Executed: {response.tools_used.map(t => t.tool).join(', ') || 'Direct synthesis'}
+                <p className="technical-note" dir="rtl">
+                  توثيق مستخرج لحظياً من السجل الوطني لشهداء فلسطين ({response.tools_used.length > 0 ? 'بحث وتدقيق خوارزمي' : 'استخلاص أرشيفي مباشر'})
                 </p>
               </div>
             )}

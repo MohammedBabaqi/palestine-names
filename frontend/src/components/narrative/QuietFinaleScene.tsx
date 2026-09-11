@@ -13,11 +13,6 @@ export default function QuietFinaleScene() {
         ولكل إنسان <em>اسمٌ وخلود.</em>
       </h2>
 
-      <div className="finale-calligraphy-tag" aria-label="تخليد اسم فلسطين">
-        <span className="tag-sparkle" aria-hidden="true">✦</span>
-        <span>تلتئم أرواح الشهداء لتصوغ في الأفق اسم الوطن الخالد: <strong>«فلسطين»</strong></span>
-      </div>
-
       <footer className="archive-colophon">
         <div>
           <strong>أسماء لا تُنسى</strong>

@@ -7,7 +7,7 @@ export const CHAPTERS: { id: string; label: string; mode: SceneMode }[] = [
   { id: 'number', label: 'البداية', mode: 'number' },
   { id: 'crowd', label: 'خارطة الذاكرة', mode: 'scatter' },
   { id: 'declaration', label: 'اسم واحد', mode: 'names' },
-  { id: 'stats', label: 'سِجل الإحصاء', mode: 'stats' },
+  { id: 'stats', label: 'شجرة الذاكرة', mode: 'stats' },
   { id: 'archivist', label: 'حارس الأرشيف', mode: 'archivist' },
   { id: 'finale', label: 'ما يبقى', mode: 'finale' },
 ];

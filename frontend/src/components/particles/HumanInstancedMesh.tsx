@@ -432,11 +432,20 @@ export default function HumanInstancedMesh() {
 
       // Color styling per mode
       if (i === pick) {
-        // Highlighting hovered martyr in warm luminous olive-gold
-        color.set('#237337');
+        // Highlighting hovered martyr in warm luminous gold
+        color.set('#d4af37');
       } else if (mode === 'finale') {
-        // Luminous Arabic Calligraphy of Palestine: eternal emerald & gold accents
-        color.set(i % 11 === 0 ? '#d4af37' : (i % 3 === 0 ? '#1b5e20' : '#2d6a4f'));
+        // Palestinian Flag Palette for «فلسطين»: Red, Green, White, Black
+        const flagTier = i % 4;
+        if (flagTier === 0) {
+          color.set('#e4312b'); // Palestinian Red
+        } else if (flagTier === 1) {
+          color.set('#149954'); // Palestinian Green
+        } else if (flagTier === 2) {
+          color.set('#ffffff'); // Palestinian White
+        } else {
+          color.set('#1e221e'); // Palestinian Black
+        }
       } else if (mode === 'stats') {
         // Olive tree palette: trunk/roots vs boughs vs leaves
         const ratio = i / Math.max(count, 1);
