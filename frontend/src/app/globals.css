@@ -140,3 +140,17 @@ input[type="search"]::-webkit-search-cancel-button { display: none; }
 body { background: var(--bg-base); }
 .archivist-art img { height: auto; }
 @media (max-width: 760px) { .results-heading { flex-direction: column; gap: 6px; } }
+
+/* Hide Next.js dev corner indicator & portal */
+nextjs-portal,
+#nextjs-dev-overlay,
+[data-nextjs-toast],
+[data-nextjs-dev-indicator],
+[data-nextjs-route-announcer],
+div[class*="dev-overlay"],
+button[aria-label*="Next.js"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}

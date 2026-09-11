@@ -20,6 +20,62 @@ function random(i: number, salt = 0) {
   const n = Math.sin((i + 1) * 127.1 + salt * 311.7) * 43758.5453;
   return n - Math.floor(n);
 }
+// High-fidelity geographic border polygon of historic Palestine (34.22°E to 35.69°E, 29.50°N to 33.28°N)
+const PALESTINE_BOUNDARY: [number, number][] = [
+  // Northern border: Ras al-Naqoura east to Upper Galilee & Metula
+  [35.10, 33.09], [35.25, 33.09], [35.39, 33.03], [35.43, 33.05], [35.48, 33.08], [35.54, 33.13], [35.57, 33.28],
+  // Northern tip: Dan, Banias, Golan western slopes
+  [35.65, 33.25], [35.69, 33.20], [35.67, 33.05], [35.65, 32.88],
+  // Sea of Galilee & Yarmouk river junction
+  [35.63, 32.75], [35.57, 32.68],
+  // Jordan Valley down south along Jordan River to Dead Sea
+  [35.50, 32.50], [35.52, 32.35], [35.55, 32.10], [35.50, 31.86], [35.50, 31.75],
+  // Dead Sea western shore (Ein Gedi down to Sodom)
+  [35.39, 31.45], [35.36, 31.31], [35.37, 31.05],
+  // Wadi Araba (Arava valley) down to Gulf of Aqaba
+  [35.25, 30.77], [35.15, 30.30], [35.06, 29.90], [34.98, 29.78], [34.95, 29.54],
+  // Southernmost tip at Gulf of Aqaba (Umm al-Rashrash / Eilat)
+  [34.89, 29.50],
+  // Egyptian / Sinai diagonal border northwest towards Rafah
+  [34.75, 29.80], [34.60, 30.50], [34.42, 30.88], [34.28, 31.22], [34.22, 31.30],
+  // Gaza Strip coast heading northeast (Rafah, Khan Yunis, Deir al-Balah, Gaza City)
+  [34.30, 31.35], [34.35, 31.42], [34.45, 31.52], [34.50, 31.58],
+  // Mediterranean Coast: Ashkelon, Ashdod, Jaffa, Netanya, Hadera
+  [34.56, 31.67], [34.64, 31.80], [34.73, 31.97], [34.76, 32.05], [34.80, 32.16], [34.85, 32.33], [34.89, 32.50], [34.93, 32.69],
+  // Cape Carmel (Haifa promontory hook)
+  [34.97, 32.83], [35.03, 32.81],
+  // Akka (Acre) north to Ras al-Naqoura
+  [35.07, 32.93], [35.09, 33.01], [35.10, 33.09]
+];
+
+const MIN_LON = 34.22, MAX_LON = 35.69;
+const MIN_LAT = 29.50, MAX_LAT = 33.28;
+const NORM_BOUNDARY: [number, number][] = PALESTINE_BOUNDARY.map(([lon, lat]) => [
+  (lon - MIN_LON) / (MAX_LON - MIN_LON),
+  (lat - MIN_LAT) / (MAX_LAT - MIN_LAT)
+]);
+
+function isInsidePalestine(x: number, y: number): boolean {
+  const n = NORM_BOUNDARY.length;
+  let inside = false;
+  let p1 = NORM_BOUNDARY[0];
+  for (let i = 0; i <= n; i++) {
+    const p2 = NORM_BOUNDARY[i % n];
+    if (y > Math.min(p1[1], p2[1]) && y <= Math.max(p1[1], p2[1])) {
+      if (x <= Math.max(p1[0], p2[0])) {
+        const xinters = p1[1] !== p2[1]
+          ? ((y - p1[1]) * (p2[0] - p1[0])) / (p2[1] - p1[1]) + p1[0]
+          : p1[0];
+        if (p1[0] === p2[0] || x <= xinters) {
+          inside = !inside;
+        }
+      }
+    }
+    p1 = p2;
+  }
+  return inside;
+}
+
 export default function HumanInstancedMesh() {
   const mesh = useRef<THREE.InstancedMesh>(null);
   const { viewport, size, invalidate } = useThree();
@@ -60,6 +116,63 @@ export default function HumanInstancedMesh() {
     }
     return Array.from({length: count}, (_,i) => points[Math.floor(i * points.length / Math.max(count,1))]);
   }, [total,count]);
+
+  // Memoized points forming the borders & territory of historic Palestine
+  const palestinePoints = useMemo(() => {
+    const segLengths: number[] = [];
+    let totalPerimeter = 0;
+    for (let i = 0; i < NORM_BOUNDARY.length - 1; i++) {
+      const dx = NORM_BOUNDARY[i + 1][0] - NORM_BOUNDARY[i][0];
+      const dy = NORM_BOUNDARY[i + 1][1] - NORM_BOUNDARY[i][1];
+      const len = Math.hypot(dx, dy);
+      segLengths.push(len);
+      totalPerimeter += len;
+    }
+
+    const points: [number, number, boolean][] = [];
+    const borderCount = Math.floor(count * 0.48);
+
+    // 1. Trace the razor-sharp geographic borders of Palestine
+    for (let i = 0; i < borderCount; i++) {
+      const target = (i / Math.max(borderCount, 1)) * totalPerimeter;
+      let acc = 0;
+      for (let s = 0; s < segLengths.length; s++) {
+        const segLen = segLengths[s];
+        if (acc + segLen >= target || s === segLengths.length - 1) {
+          const t = Math.max(0, Math.min(1, (target - acc) / Math.max(segLen, 0.0001)));
+          const pA = NORM_BOUNDARY[s];
+          const pB = NORM_BOUNDARY[s + 1] || NORM_BOUNDARY[0];
+          const jx = (random(i, 41) - 0.5) * 0.007;
+          const jy = (random(i, 42) - 0.5) * 0.007;
+          points.push([pA[0] + t * (pB[0] - pA[0]) + jx, pA[1] + t * (pB[1] - pA[1]) + jy, true]);
+          break;
+        }
+        acc += segLen;
+      }
+    }
+
+    // 2. Populate the interior territory (Galilee, West Bank, Coast, Gaza, Negev)
+    let attempts = 0;
+    let seed = 0;
+    while (points.length < count && attempts < 40000) {
+      attempts++;
+      seed++;
+      const rx = random(seed, 101);
+      const ry = random(seed, 102);
+      if (isInsidePalestine(rx, ry)) {
+        points.push([rx, ry, false]);
+      }
+    }
+
+    // Safety fallback to fill remaining slots
+    while (points.length < count) {
+      const idx = points.length % Math.max(borderCount, 1);
+      points.push([points[idx][0], points[idx][1], false]);
+    }
+
+    return points;
+  }, [count]);
+
   const targets = useMemo(() => {
     const values = new Float32Array(count * 4);
     const mobile = size.width < 760;
@@ -74,10 +187,22 @@ export default function HumanInstancedMesh() {
         y=-(point[1]/350-.5)*Math.min(h*.34,w*.32)+h*.005;
         scale=mobile ? .043 : .062; z=0;
       } else if(mode === 'scatter') {
-        x=Math.cos(b*Math.PI*2)*Math.sqrt(a)*w*.34 - w*.09;
-        y=Math.sin(b*Math.PI*2)*Math.sqrt(a)*h*.28 - h*.07;
-        scale=(mobile ? .075 : .09) + c*.03;
-        if(x>w*.12 && y>h*.03) x-=w*.34;
+        // Assembles into the sovereign borders and territory of Palestine
+        const pt = palestinePoints[i] || [0.5, 0.5, true];
+        const [nx, ny, isBorder] = pt;
+        // Natural aspect ratio of Palestine (Height / Width = ~2.57)
+        const mapH = mobile ? Math.min(h * 0.62, w * 1.18) : Math.min(h * 0.78, w * 0.52);
+        const mapW = mapH / 2.57;
+
+        // Position: On desktop, text is on the right (RTL), so center Palestine slightly to the left
+        const xCenter = mobile ? 0 : -w * 0.13;
+        const yCenter = mobile ? -h * 0.04 : -h * 0.02;
+
+        x = (nx - 0.48) * mapW + xCenter;
+        // ny: 0 is South, 1 is North. In 3D: +y is up (North), -y is down (South).
+        y = (ny - 0.50) * mapH + yCenter;
+        z = isBorder ? 0.35 + c * 0.25 : (c - 0.5) * 0.7;
+        scale = (mobile ? 0.052 : 0.068) + (isBorder ? 0.012 : 0) + c * 0.01;
       } else if(mode === 'names') {
         x=(a>.5?1:-1)*(w*.32+b*w*.19); y=(c-.5)*h*.7; scale=.07;
         if(i===0) { x=0; y=h*.01; z=3; scale=mobile ? .7 : 1.05; }
@@ -108,10 +233,11 @@ export default function HumanInstancedMesh() {
       values[i*4]=x; values[i*4+1]=y; values[i*4+2]=z; values[i*4+3]=scale;
     }
     return values;
-  },[count,w,h,size.width,mode,number,archiveRecords,visibleRecords,query,sort]);
+  },[count,w,h,size.width,mode,number,palestinePoints,archiveRecords,visibleRecords,query,sort]);
   useEffect(() => {
     dirty.current = true; hovered.current=-1;
     useParticleStore.setState({ hoveredRecord: null, hoveredScreenPos: null });
+    invalidate();
     invalidate();
   },[targets,reduced,invalidate]);
   useEffect(() => useParticleStore.subscribe((s,prev) => {

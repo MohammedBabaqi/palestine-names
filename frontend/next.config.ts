@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
   },
+  devIndicators: false,
   // Ensure Three.js and R3F work correctly with Next.js
   transpilePackages: ['three', '@react-three/fiber', '@react-three/drei'],
   // Allow WebGL in experimental features
