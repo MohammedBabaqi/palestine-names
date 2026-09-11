@@ -17,6 +17,6 @@ export default function Navbar() {
     {open && <nav id="chapter-index" className="chapter-index" aria-label="فصول الحكاية" onKeyDown={e => { if (e.key === 'Escape') setOpen(false); }}>
       {CHAPTERS.map((c, i) => <a href={'#' + c.id} key={c.id} aria-current={chapter.id === c.id ? 'location' : undefined} onClick={() => setOpen(false)}><span>{c.label}</span><bdi>{String(i + 1).padStart(2, '0')}</bdi></a>)}
     </nav>}
-    <aside className="reading-rail" aria-label="الفصل الحالي"><span className="rail-line"><i style={{ transform: 'scaleY(' + progress + ')' }} /></span><span className="rail-label">{chapter.label}</span><span className="folio" dir="ltr">{String(CHAPTERS.indexOf(chapter) + 1).padStart(2, '0')} / 07</span></aside>
+    <aside className="reading-rail" aria-label="الفصل الحالي"><span className="rail-line"><i style={{ transform: 'scaleY(' + progress + ')' }} /></span><span className="rail-label">{chapter.label}</span><span className="folio" dir="ltr">{String(CHAPTERS.indexOf(chapter) + 1).padStart(2, '0')} / {String(CHAPTERS.length).padStart(2, '0')}</span></aside>
   </>;
 }
