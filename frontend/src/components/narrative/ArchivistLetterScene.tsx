@@ -40,7 +40,7 @@ export default function ArchivistLetterScene() {
           highlightIds: new Set(res.records.map(r => r.id))
         });
       }
-    } catch (err) {
+    } catch {
       setError(true);
     } finally {
       busy.current = false;

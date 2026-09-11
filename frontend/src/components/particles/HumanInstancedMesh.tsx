@@ -85,7 +85,6 @@ export default function HumanInstancedMesh() {
   const mode = useParticleStore(s => s.mode);
   const sort = useParticleStore(s => s.sortMode);
   const query = useParticleStore(s => s.searchQuery);
-  const matchIds = useMemo(() => new Set(archiveRecords.map(r => r.id)), [archiveRecords]);
   const reduced = useParticleStore(s => s.reducedMotion);
   const visibleRecords = useMemo(() => {
     if (mode !== 'archive' || !archiveRecords.length) return records;
@@ -242,15 +241,16 @@ export default function HumanInstancedMesh() {
       } else if(mode === 'stats') {
         // Creative 4th Shape: The Olive Tree of Memory & Roots (شجرة الزيتون والذاكرة)
         // Positioned in the left open stage, completely separate from the sidebar cards on the right
-        const xCenter = mobile ? 0 : -w * 0.16;
+        const xCenter = mobile ? 0 : -w * 0.23;
+        const treeWidth = mobile ? w : w * 0.52;
         const ratio = i / Math.max(count, 1);
 
         if (ratio < 0.28) {
           // Roots & Trunk (Deep, ancient, grounded elders & ancestors)
           const trunkH = ratio / 0.28; // 0 to 1
           y = -h * 0.38 + trunkH * (h * 0.30);
-          const flare = trunkH < 0.25 ? (0.25 - trunkH) * 4 * w * 0.14 : 0;
-          x = xCenter + (b - 0.5) * (w * 0.065 + flare);
+          const flare = trunkH < 0.25 ? (0.25 - trunkH) * 4 * treeWidth * 0.14 : 0;
+          x = xCenter + (b - 0.5) * (treeWidth * 0.065 + flare);
           z = (c - 0.5) * 0.9;
           scale = mobile ? 0.055 : 0.068;
         } else if (ratio < 0.60) {
@@ -258,14 +258,14 @@ export default function HumanInstancedMesh() {
           const boughT = (ratio - 0.28) / 0.32;
           const branchSide = a > 0.5 ? 1 : -1;
           const curve = Math.pow(boughT, 0.75);
-          x = xCenter + branchSide * (curve * w * 0.34 + (b - 0.5) * w * 0.08);
+          x = xCenter + branchSide * (curve * treeWidth * 0.34 + (b - 0.5) * treeWidth * 0.08);
           y = -h * 0.12 + curve * (h * 0.32) + (c - 0.5) * h * 0.07;
           z = (d - 0.5) * 1.1;
           scale = mobile ? 0.048 : 0.06;
         } else {
           // Crown / Canopy of Leaves (Children, infants, blossoms shimmering high)
           const angle = a * Math.PI * 2;
-          const radiusW = Math.sqrt(b) * (w * 0.42);
+          const radiusW = Math.sqrt(b) * (treeWidth * 0.42);
           const radiusH = Math.sqrt(c) * (h * 0.26);
           x = xCenter + Math.cos(angle) * radiusW;
           y = h * 0.12 + Math.sin(angle) * radiusH;
@@ -361,7 +361,7 @@ export default function HumanInstancedMesh() {
   useFrame((state, delta) => {
     if(!mesh.current || !count) return;
     const pState = useParticleStore.getState();
-    const factor = reduced ? 1 : 1-Math.exp(-Math.min(delta,.05)*16);
+    const factor = reduced ? 1 : 1-Math.exp(-Math.min(delta,.05)*8);
     let unsettled=false;
     const time = state.clock.getElapsedTime();
 
@@ -397,17 +397,17 @@ export default function HumanInstancedMesh() {
       }
 
       // Mode-specific organic fluid motions
-      if(mode === 'finale') {
+      if(!reduced && mode === 'finale') {
         // Living constellation breathing in the calligraphy of Palestine
-        tx += Math.sin(time * 1.5 + i * 0.15) * (w * 0.003);
-        ty += Math.cos(time * 1.8 + i * 0.2) * (h * 0.003);
+        tx += Math.sin(time * 0.65 + i * 0.15) * (w * 0.0015);
+        ty += Math.cos(time * 0.8 + i * 0.2) * (h * 0.0015);
         unsettled = true;
-      } else if(mode === 'stats') {
+      } else if(!reduced && mode === 'stats') {
         // Gentle Mediterranean breeze in the Olive Tree canopy
         const ratio = i / Math.max(count, 1);
         if (ratio >= 0.6) {
-          tx += Math.sin(time * 1.4 + i * 0.2) * (w * 0.006);
-          ty += Math.cos(time * 1.8 + i * 0.3) * (h * 0.005);
+          tx += Math.sin(time * 0.7 + i * 0.2) * (w * 0.002);
+          ty += Math.cos(time * 0.9 + i * 0.3) * (h * 0.002);
           unsettled = true;
         }
       }

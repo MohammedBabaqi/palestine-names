@@ -76,7 +76,7 @@ export interface ToolExecutionLog {
   algorithm?: string;
   complexity?: string;
   execution_time_ms?: number;
-  arguments: { [key: string]: any };
+  arguments: { [key: string]: unknown };
 }
 
 export interface AgentResponse {

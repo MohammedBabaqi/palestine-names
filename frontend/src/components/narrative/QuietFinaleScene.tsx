@@ -6,43 +6,73 @@ export default function QuietFinaleScene() {
 
   return (
     <section id="finale" className="chapter finale" aria-labelledby="finale-title">
-      <span className="eyebrow">05 — ما يبقى</span>
-      <p>لم يكونوا أرقامًا.</p>
-      <p>كانوا حيواتٍ وأحلاماً.</p>
-      <h2 id="finale-title">
-        ولكل إنسان <em>اسمٌ وخلود.</em>
-      </h2>
+      <div className="finale-lead-block">
+        <span className="eyebrow">05 — ما يبقى</span>
+        <p className="finale-verse">لم يكونوا أرقامًا.. كانوا حيواتٍ وأحلاماً.</p>
+        <h2 id="finale-title">
+          ولكل إنسان <em>اسمٌ وخلود.</em>
+        </h2>
+      </div>
 
-      <footer className="archive-colophon">
-        <div>
-          <strong>أسماء لا تُنسى</strong>
-          <p>سِجل تفاعلي تخليداً لأرواح شهداء فلسطين.</p>
-        </div>
+      {/* Breathing space for the 3D Palestine calligraphy formed by the martyrs */}
+      <div className="finale-calligraphy-stage" aria-hidden="true" />
 
-        <div className="colophon-developer">
-          <span className="colophon-role">تطوير وهندسة المنصة</span>
-          <a
-            href="https://github.com/MohammedBabaqi"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="developer-link"
-            aria-label="GitHub Profile of Developer Mohammed Babaqi"
-          >
-            <strong className="dev-name">Mohammed Babaqi</strong>
-            <span className="dev-handle" dir="ltr">github.com/MohammedBabaqi ↗</span>
-          </a>
-        </div>
-
-        <div className="colophon-meta">
-          <p>
-            يستند هذا العرض إلى سجلات البيانات الموثقة.
-            <br />
-            {total !== null && `${total.toLocaleString('ar-EG')} سجلاً موثقاً بالاسم والعمر.`}
+      {/* Minimalist Pro Colophon Bar */}
+      <footer className="archive-colophon" role="contentinfo">
+        <div className="colophon-col colophon-identity">
+          <div className="colophon-badge">
+            <span className="live-dot" aria-hidden="true" />
+            <span>سِجل الذاكرة الوطنية المستقل</span>
+          </div>
+          <strong className="colophon-brand">أسماء لا تُنسى</strong>
+          <p className="colophon-sub">
+            {total !== null ? `${total.toLocaleString('ar-EG')} إنساناً موثقاً بالاسم والعمر.` : 'أرشيف تفاعلي تخليداً لأرواح شهداء فلسطين.'}
           </p>
-          <span lang="en" dir="ltr">
-            TO REMEMBER
-            <br />
-            IS TO KEEP A NAME ALIVE.
+        </div>
+
+        <div className="colophon-col colophon-developer">
+          <span className="dev-role-label">تطوير وهندسة المنصة</span>
+          <strong className="dev-name" lang="en" dir="ltr">Mohammed Babaqi</strong>
+          <div className="dev-social-pills" dir="ltr">
+            <a
+              href="https://github.com/MohammedBabaqi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pro-pill-btn"
+              aria-label="Mohammed Babaqi on GitHub (opens in new tab)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+              </svg>
+              <span>GitHub</span>
+              <span className="arrow-out" aria-hidden="true">↗</span>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/in/mohammedbabaqi/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="pro-pill-btn"
+              aria-label="Mohammed Babaqi on LinkedIn (opens in new tab)"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                <rect x="2" y="9" width="4" height="12" />
+                <circle cx="4" cy="4" r="2" />
+              </svg>
+              <span>LinkedIn</span>
+              <span className="arrow-out" aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="colophon-col colophon-action">
+          <a className="pro-return-top" href="#number" aria-label="العودة إلى بداية الأرشيف">
+            <span>العودة إلى البداية</span>
+            <span className="top-arrow" aria-hidden="true">↑</span>
+          </a>
+          <span className="motto-en" lang="en" dir="ltr">
+            TO REMEMBER · IS TO KEEP A NAME ALIVE
           </span>
         </div>
       </footer>
