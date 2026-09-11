@@ -14,44 +14,27 @@ export default function QuietFinaleScene() {
         </h2>
       </div>
 
+      {/* ─── Darwish Quote — Palestinian Flag Colors ─── */}
+      <blockquote className="flag-quote" aria-label="اقتباس محمود درويش">
+        <p className="flag-quote-text">
+          <span className="fq-green">على هذه الأرض</span>{' '}
+          <span className="fq-white">ما يستحقّ</span>{' '}
+          <span className="fq-red">الحياة</span>
+        </p>
+        <footer className="flag-quote-attr">
+          <span className="fq-dash" aria-hidden="true" />
+          <cite>محمود درويش</cite>
+        </footer>
+      </blockquote>
+
       {/* Breathing space for the 3D Palestine calligraphy formed by the martyrs */}
       <div className="finale-calligraphy-stage" aria-hidden="true" />
-
-      {/* Commemorative Palestine Flag Quote Monument */}
-      <div className="finale-monument-banner" dir="rtl" role="region" aria-label="شاهد الخلود الوطني">
-        <div className="flag-ribbon-bar" aria-hidden="true">
-          <span className="ribbon-red" />
-          <span className="ribbon-black" />
-          <span className="ribbon-white" />
-          <span className="ribbon-green" />
-        </div>
-        <blockquote className="monument-arabic-verse">
-          «عَلَى هَذِهِ الأَرْضِ مَا يَسْتَحِقُّ الحَيَاة..
-          <br />
-          <span className="verse-highlight">كَانَتْ تُسَمَّى فِلَسْطِين.. صَارَتْ تُسَمَّى فِلَسْطِين»</span>
-        </blockquote>
-        <div className="monument-author-line">
-          <span className="flag-dot-trio" aria-hidden="true">
-            <i className="dot red" />
-            <i className="dot green" />
-            <i className="dot black" />
-          </span>
-          <cite className="monument-author-name">مَحْمُود دَرْوِيش</cite>
-          <span className="monument-source-tag">جدارية البقاء والذاكرة</span>
-        </div>
-      </div>
 
       {/* Minimalist Pro Colophon Bar */}
       <footer className="archive-colophon" role="contentinfo">
         <div className="colophon-col colophon-identity">
           <div className="colophon-badge">
             <span className="live-dot" aria-hidden="true" />
-            <span className="flag-pip-badge" aria-hidden="true">
-              <i className="pip-r" />
-              <i className="pip-k" />
-              <i className="pip-w" />
-              <i className="pip-g" />
-            </span>
             <span>سِجل الذاكرة الوطنية المستقل</span>
           </div>
           <strong className="colophon-brand">أسماء لا تُنسى</strong>
