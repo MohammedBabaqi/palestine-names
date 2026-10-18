@@ -1,5 +1,7 @@
 'use client';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
+import { useParticleStore } from '@/lib/particleStore';
+import DatasetNote from '@/components/DatasetNote';
 
 interface Cohort {
   id: string;
@@ -11,50 +13,21 @@ interface Cohort {
 }
 
 export default function LivingStatsScene() {
+  const statistics = useParticleStore(s => s.statistics);
+  const status = useParticleStore(s => s.dataStatus);
+  const number = (n: number | null | undefined) => n == null ? '—' : n.toLocaleString('en-US');
+  const age = (n: number | null | undefined) => n == null ? '—' : number(Math.round(n));
+  const childPercent = statistics?.total ? Math.round(statistics.children_under_18 / statistics.total * 1000) / 10 : null;
   const [activeCohort, setActiveCohort] = useState<string | null>(null);
 
-  const cohorts: Cohort[] = useMemo(() => [
-    {
-      id: 'infants',
-      label: 'الرُضّع والأطفال دون 5 سنوات',
-      range: '0–4',
-      count: 7120,
-      pct: 9.8,
-      note: '824 رضيعاً لم يكملوا عامهم الأول قبل أن يُقتلوا، لم تصدر لبعضهم شهادات ميلاد بعد.'
-    },
-    {
-      id: 'children',
-      label: 'أطفال المدارس واليافعون',
-      range: '5–14',
-      count: 11830,
-      pct: 16.2,
-      note: 'أجيال حُرمت من مقاعد الدراسة ودفاتر الرسم وحق اللعب والحياة.'
-    },
-    {
-      id: 'youth',
-      label: 'جيل الشباب والجامعات',
-      range: '15–24',
-      count: 15200,
-      pct: 20.9,
-      note: 'طاقات إبداعية وأطباء ومهندسو الغد الذين استُشهدوا على عتبة أحلامهم.'
-    },
-    {
-      id: 'adults',
-      label: 'البالغون وسند العائلات',
-      range: '25–49',
-      count: 25480,
-      pct: 35.0,
-      note: 'آباء وأمهات تركوا خلفهم آلاف الأيتام وبيوتاً أُغلقت أبوابها إلى الأبد.'
-    },
-    {
-      id: 'elders',
-      label: 'شيوخ الأرض وشواهد النكبة',
-      range: '50+',
-      count: 13205,
-      pct: 18.1,
-      note: 'أكبرهم معمر بلغ 101 عام؛ وُلدوا قبل نكبة 1948 وشهدوا قرناً من الصمود.'
-    }
-  ], []);
+  const cohorts: Cohort[] = useMemo(() => (statistics?.cohorts || []).map(c => ({
+    ...c,
+    label: ({ infants: 'الرُضّع والأطفال دون 5 سنوات', children: 'أطفال المدارس واليافعون',
+      youth: 'جيل الشباب والجامعات', adults: 'البالغون وسند العائلات',
+      elders: 'شيوخ الأرض وشواهد الذاكرة' } as Record<string, string>)[c.id],
+    pct: statistics?.total_with_age ? c.count / statistics.total_with_age * 100 : 0,
+    note: `الأسماء المسجّلة ضمن الفئة العمرية ${c.range}؛ تُستبعد الأعمار غير المتاحة من التوزيع.`,
+  })), [statistics]);
 
   const selectedData = cohorts.find(c => c.id === activeCohort);
 
@@ -72,36 +45,37 @@ export default function LivingStatsScene() {
               بل <em>شجرة حياة</em> تمتد جذورها في الأرض.
             </h2>
             <p className="stats-poetic-lead">
-              تتجمع الأرواح لتشكل شجرة زيتون فلسطين ثلاثية الأبعاد؛ مرر الفأرة فوق أوراقها وأغصانها للتعرف على أصحابها.
+              تتجمع الأرواح لتشكل شجرة زيتون فلسطين ثلاثية الأبعاد؛ مرر الفأرة فوق أوراقها وأغصانها للتعرف على أصحابها. التشكيل عيّنة من الأسماء المسجّلة.
             </p>
           </div>
 
           {/* 3 Striking Sculptural Metrics */}
           <div className="stats-trio-grid">
+            {!statistics && <p className="feedback" role="status">{status === 'error' ? 'تعذّر تحميل الإحصاءات. أعد تحميل الصفحة للمحاولة.' : 'نستحضر بيانات الأرشيف…'}</p>}
             <article className="stat-trio-card accent-card">
-              <span className="trio-badge">29.7٪ من الشهداء</span>
-              <strong className="trio-number">21,637</strong>
+              <span className="trio-badge">{number(childPercent)}٪ من الأسماء المسجّلة</span>
+              <strong className="trio-number">{number(statistics?.children_under_18)}</strong>
               <h3 className="trio-title">طفلاً ويافعاً</h3>
               <p className="trio-desc">
-                بينهم <strong>824 رضيعًا</strong> استشهدوا في شهورهم الأولى.
+                بينهم <strong>{number(statistics?.infants_under_1)} رضيعًا</strong> دون عام واحد.
               </p>
             </article>
 
             <article className="stat-trio-card">
               <span className="trio-badge">جيل في ريعان شبابه</span>
-              <strong className="trio-number">28.7</strong>
+              <strong className="trio-number">{age(statistics?.average_age)}</strong>
               <h3 className="trio-title">عامًا متوسط الأعمار</h3>
               <p className="trio-desc">
-                العمر الوسيط <strong>27 عامًا</strong>، ما يؤكد استهداف شباب المستقبل.
+                العمر الوسيط <strong>{age(statistics?.median_age)} عامًا</strong> بحسب الأعمار المسجّلة.
               </p>
             </article>
 
             <article className="stat-trio-card">
-              <span className="trio-badge">شاهد النكبتين</span>
-              <strong className="trio-number">101</strong>
+              <span className="trio-badge">أكبر عمر مسجّل</span>
+              <strong className="trio-number">{age(statistics?.max_age)}</strong>
               <h3 className="trio-title">عامًا أكبر الشهداء سنًا</h3>
               <p className="trio-desc">
-                مواليد 1923، نجا من نكبة 1948 ليرتقي شهيدًا مع أحفاده.
+                الأعمار غير المتاحة: {number(statistics?.unknown_age)} سجل.
               </p>
             </article>
           </div>
@@ -114,6 +88,9 @@ export default function LivingStatsScene() {
             </div>
 
             {/* Segmented Bar */}
+            <div className="spectrum-track" aria-hidden="true">
+              {cohorts.map(c => <span key={c.id} style={{ width: `${c.pct}%` }} />)}
+            </div>
             <div className="spectrum-bar" role="group" aria-label="توزيع الفئات العمرية">
               {cohorts.map(c => {
                 const isActive = activeCohort === c.id;
@@ -122,12 +99,13 @@ export default function LivingStatsScene() {
                     key={c.id}
                     type="button"
                     className={`spectrum-segment ${isActive ? 'active' : ''}`}
-                    style={{ width: `${c.pct}%` }}
+                    style={{ '--cohort-share': `${c.pct}%` } as CSSProperties}
                     onClick={() => setActiveCohort(isActive ? null : c.id)}
                     aria-pressed={isActive}
+                    aria-label={`${c.label}: ${number(c.count)} اسمًا (${c.pct.toFixed(1)}٪)`}
                   >
-                    <span className="segment-label">{c.range}</span>
-                    <span className="segment-pct">{c.pct}٪</span>
+                    <bdi className="segment-label">{c.range}</bdi>
+                    <span className="segment-pct">{c.pct.toFixed(1)}٪</span>
                   </button>
                 );
               })}
@@ -135,7 +113,7 @@ export default function LivingStatsScene() {
 
             {/* Selected Cohort Dynamic Note */}
             {selectedData && (
-              <div className="spectrum-detail-box" dir="rtl">
+              <div className="spectrum-detail-box" dir="rtl" role="status">
                 <strong>{selectedData.label} ({selectedData.count.toLocaleString('ar-EG')} شهيد):</strong>
                 <span> {selectedData.note}</span>
               </div>
@@ -144,19 +122,15 @@ export default function LivingStatsScene() {
 
           {/* Lineage & AI Agent Bridge */}
           <div className="stats-bottom-ribbon">
-            <div className="lineage-tribute">
-              <span className="lineage-seal">إبادة السلالات</span>
-              <p>
-                شُطبت أسر كاملة من السجل المدني؛ كعائلات <strong>النجار (+830)</strong>، <strong>المصري (+450)</strong>، و<strong>نصر (+420)</strong>.
-              </p>
-            </div>
+            <div className="lineage-tribute"><DatasetNote compact /></div>
 
-            <a href="#archivist" className="agent-shortcut-btn">
+            <a href="/archive" className="agent-shortcut-btn">
               <span>البحث في السجلات</span>
               <span className="btn-arrow" aria-hidden="true">↙</span>
             </a>
           </div>
         </div>
+        <div className="stats-memory-column" data-particle-stage aria-hidden="true" />
       </div>
     </section>
   );

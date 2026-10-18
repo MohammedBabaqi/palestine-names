@@ -1,7 +1,5 @@
 'use client';
 import { useEffect } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useParticleStore, type SceneMode } from './particleStore';
 export const CHAPTERS: { id: string; label: string; mode: SceneMode }[] = [
   { id: 'number', label: 'البداية', mode: 'number' },
@@ -11,69 +9,64 @@ export const CHAPTERS: { id: string; label: string; mode: SceneMode }[] = [
   { id: 'archivist', label: 'حارس الأرشيف', mode: 'archivist' },
   { id: 'finale', label: 'ما يبقى', mode: 'finale' },
 ];
+
 export function useScrollStory() {
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
-    let rafId: number;
-
+    let frame = 0;
+    let disposed = false;
     const sync = () => {
+      frame = 0;
       const vh = window.innerHeight;
-      const scrollY = window.scrollY;
-      const docHeight = Math.max(1, document.documentElement.scrollHeight - vh);
-      const focus = vh * 0.4;
-      
       let active = CHAPTERS[0];
       for (const chapter of CHAPTERS) {
-        const el = document.getElementById(chapter.id);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= focus) {
-            active = chapter;
-          }
+        const rect = document.getElementById(chapter.id)?.getBoundingClientRect();
+        if (rect && rect.top <= vh * .4) active = chapter;
+      }
+      const section = document.getElementById(active.id);
+      const rect = section?.getBoundingClientRect();
+      // The souls stay suspended in the viewport while chapters scroll behind them.
+      const vw = window.innerWidth;
+      const mobile = vw < 760;
+      let x = .5, y = .5, width = 1, height = .8, visible = true;
+      if (active.mode === 'scatter') {
+        x = mobile ? .5 : .37; y = .53; width = mobile ? .9 : .58; height = .84;
+      } else if (active.mode === 'stats') {
+        x = mobile ? .5 : .27; y = .53; width = mobile ? .9 : .55; height = .88;
+      } else if (active.mode === 'finale') {
+        // Original main-branch centre: calligraphy stands behind the closing prose.
+        y = mobile ? .54 : .51; height = .5;
+        const footer = section?.querySelector('.archive-colophon')?.getBoundingClientRect();
+        if (footer) {
+          const halfCalligraphy = vw * (mobile ? 1.05 : .88) * .375 / 2;
+          y = Math.min(y, (footer.top-halfCalligraphy-24)/vh);
+          const mastheadBottom = document.querySelector('header.masthead')?.getBoundingClientRect().bottom || 0;
+          visible = footer.top > mastheadBottom+24;
         }
       }
-
-      const activeEl = document.getElementById(active.id);
-      const rect = activeEl?.getBoundingClientRect();
-      const progress = rect ? Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - vh * 0.3))) : 0;
-
+      const progress = rect ? Math.max(0, Math.min(1, -rect.top / Math.max(1, rect.height - vh * .3))) : 0;
+      const scrollHeight = Math.max(1, document.documentElement.scrollHeight - vh);
       useParticleStore.setState({
-        mode: active.mode,
-        chapterProgress: progress,
-        scrollProgress: scrollY / docHeight,
+        mode: active.mode, chapterProgress: progress,
+        scrollProgress: Math.max(0, Math.min(1, window.scrollY / scrollHeight)),
+        scrollY: window.scrollY,
+        stageWidth: vw * width, stageHeight: vh * height,
+        stageX: vw * x, stageY: vh * y,
+        stageVisible: visible,
       });
     };
-
-    const handleScroll = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(sync);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', sync, { passive: true });
-
-    const trigger = ScrollTrigger.create({
-      start: 0,
-      end: 'max',
-      onUpdate: sync,
-      onRefresh: sync,
-    });
-
-    const observer = new ResizeObserver(() => {
-      ScrollTrigger.refresh();
-      sync();
-    });
-
+    const schedule = () => { if (!disposed && !frame) frame = requestAnimationFrame(sync); };
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    const observer = new ResizeObserver(schedule);
     const main = document.querySelector('main');
     if (main) observer.observe(main);
-
+    void document.fonts.ready.then(schedule);
     sync();
-
     return () => {
-      cancelAnimationFrame(rafId);
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', sync);
-      trigger.kill();
+      disposed = true;
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', schedule);
       observer.disconnect();
     };
   }, []);

@@ -1,6 +1,8 @@
 'use client';
+import { useParticleStore } from '@/lib/particleStore';
 
 export default function LivingCrowdScene() {
+  const sampleSize = useParticleStore(s => s.particleCount);
   return (
     <section id="crowd" className="chapter crowd" aria-labelledby="crowd-title">
       <div className="chapter-heading">
@@ -11,7 +13,7 @@ export default function LivingCrowdScene() {
           ترى <em>أرواحهم.</em>
         </h2>
         <p>
-          تتشكّل حدود فلسطين التاريخية من 72 ألف جسد وروح؛ من رأس الناقورة إلى خليج العقبة، ومن البحر إلى النهر.
+          تتشكّل حدود فلسطين التاريخية من آلاف الهيئات البشرية؛ من رأس الناقورة إلى خليج العقبة، ومن البحر إلى النهر.
           لم يكونوا أرقاماً عابرة، بل كانوا شعباً، وأرضاً، وهوية.
         </p>
       </div>
@@ -23,7 +25,7 @@ export default function LivingCrowdScene() {
         </div>
         <div className="crowd-tag">
           <span className="tag-dot" aria-hidden="true" />
-          <span>72,835 هيئة بشرية في تشكيل حي</span>
+          <span>{sampleSize ? `${sampleSize.toLocaleString('en-US')} هيئة بشرية تمثل عيّنة من السجلات` : 'التشكيل عيّنة من الأسماء المسجّلة'}</span>
         </div>
         <div className="crowd-tag">
           <span className="tag-dot" aria-hidden="true" />
@@ -38,6 +40,7 @@ export default function LivingCrowdScene() {
         <cite>— محمود درويش</cite>
       </blockquote>
 
+      <div className="crowd-memory-stage" data-particle-stage aria-hidden="true" />
       <p className="scene-footnote">
         خارطة فلسطين تتجسّد من آلاف الهيئات ثلاثية الأبعاد؛ كل هيئة مرتبطة بسجل فعلي موثق.
       </p>

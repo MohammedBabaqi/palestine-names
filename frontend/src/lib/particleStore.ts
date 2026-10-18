@@ -3,7 +3,7 @@
  * Controls scene mode, hover state, search highlights, and camera.
  */
 import { create } from 'zustand';
-import type { Record, Statistics } from './types';
+import type { Record, Statistics, DatasetMetadata } from './types';
 
 export type SceneMode =
   | 'hero'        // pre-scatter, number shape
@@ -19,14 +19,23 @@ export type SceneMode =
 interface ParticleState {
   total: number | null;
   statistics: Statistics | null;
+  dataset: DatasetMetadata | null;
+  stageWidth: number;
+  stageHeight: number;
+  stageX: number;
+  stageY: number;
+  stageVisible: boolean;
+  calligraphyReady: boolean;
   dataStatus: 'loading' | 'ready' | 'error';
   reducedMotion: boolean;
   webglReady: boolean;
+  particleCount: number;
   chapterProgress: number;
   selectedRecord: Record | null;
   archiveRecords: Record[];
   mode: SceneMode;
   scrollProgress: number;           // 0–1 overall page scroll
+  scrollY: number;                  // Reader position drives the bounded current in the suspended field
   hoveredId: string | null;         // record ID of hovered human
   hoveredRecord: Record | null;     // full record data for popup
   hoveredScreenPos: { x: number; y: number } | null;
@@ -49,14 +58,23 @@ interface ParticleState {
 export const useParticleStore = create<ParticleState>((set) => ({
   total: null,
   statistics: null,
+  dataset: null,
+  stageWidth: 0,
+  stageHeight: 0,
+  stageX: 0,
+  stageY: 0,
+  stageVisible: false,
+  calligraphyReady: false,
   dataStatus: 'loading',
-  reducedMotion: false,
+  reducedMotion: true,
   webglReady: false,
+  particleCount: 0,
   chapterProgress: 0,
   selectedRecord: null,
   archiveRecords: [],
   mode: 'hero',
   scrollProgress: 0,
+  scrollY: 0,
   hoveredId: null,
   hoveredRecord: null,
   hoveredScreenPos: null,
