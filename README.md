@@ -29,7 +29,7 @@
 [🤖 AI Archivist](#ai-archivist) •
 [⚙️ Environment Setup](#environment-setup) •
 [🚀 Quick Start](#quick-start) •
-[🧮 Algorithms & Big-O](#algorithms) •
+[🔎 Archive Search](#archive-search) •
 [🎨 Design System](#design-system)
 
 ---
@@ -188,34 +188,15 @@ sequenceDiagram
     UI-->>User: Render response and record details
 ```
 
-### Algorithmic Tools Bound to the Agent
-
-| Tool Name | Underlying Operation | Complexity | Purpose |
-| --- | --- | --- | --- |
-| `search_by_name` | Linear scan | $O(n)$ | Normalized, multi-token Arabic and English name search. |
-| `search_by_age` | Age sorting + binary bounds | $O(n \log n + k)$ overall | Exact or tolerance-based age search, returning $k$ matches. |
-| `sort_by_age` | Quick Sort | $O(n \log n)$ average; $O(n^2)$ worst | Order records by age. |
-| `sort_by_name` | Merge Sort | $O(n \log n)$ | Order records by normalized name. |
-| `get_archive_statistics` | Scans + age sorting | $O(n \log n)$ overall | Counts, age groups, averages and median age. |
-
-<a id="algorithms"></a>
+<a id="archive-search"></a>
 
 ---
 
-## 🧮 Algorithms & Data Structures
+## 🔎 Archive Search
 
-The project retains its **Python search and sorting implementations** in [`backend/algorithms/`](backend/algorithms), alongside the memorial and archive experience.
+Search the archive by Arabic or English name, filter by exact age, sort the results and browse individual records. Search and filters stay in the URL, so a result view can be bookmarked or shared.
 
-| Operation | Algorithm | Complexity | Characteristics |
-| --- | --- | --- | --- |
-| Name Search | Linear Search | $O(n)$ | Normalized, multi-token Arabic and English matching. |
-| Age Search | Binary Search | $O(\log n + k)$ after sorting | Finds the age boundaries and returns $k$ matches. |
-| Age Sorting | Quick Sort | $O(n \log n)$ average; $O(n^2)$ worst | Median-of-three pivot and partitioning on a copied list. |
-| Name Sorting | Merge Sort | $O(n \log n)$ | Divide-and-conquer with normalized name comparisons. |
-| Date-of-Birth Search | Linear Search | $O(n)$ | Scans a date range. |
-| Chronological Sorting | Insertion Sort | $O(n^2)$ worst | Incremental date-of-birth sorting. |
-
-**Implementation notes:** The age-search helper constructs and sorts its age list per call, so the full operation includes $O(n \log n)$ preprocessing. The paginated archive uses Python's built-in sort for age ordering; the dedicated sorting endpoints and archivist retain the custom implementations. Statistics that calculate a median also sort the known ages.
+**[Search the archive](https://palestine.babaqi.io/archive)**
 
 <a id="quick-start"></a>
 
